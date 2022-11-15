@@ -43,7 +43,7 @@ void Command::execCommand(std::string line, Board &board)
 void Command::_start(std::string args, Board &board)
 {
     try {
-        if (args == "" || args.find(" ") > 0 || std::stoi(args) != DEFAULT_BOARD_SIZE) {
+        if (args.find(" ") == args.npos && std::stoi(args) == DEFAULT_BOARD_SIZE) {
             board.setBoard(std::stoi(args));
             Printer::print("OK - everything is good");
         } else {
@@ -59,20 +59,6 @@ void Command::_turn(std::string args, Board &board)
     std::size_t x = 0;
     std::size_t y = 0;
 
-    try {
-        if (args == "" || args.find(" ") != args.npos || std::stoi(args.substr(0, args.find(","))) > DEFAULT_BOARD_SIZE) {
-            board.setBoard(std::stoi(args));
-        } else {
-            BrainCommand::ERROR("unsupported size or other error");
-        }
-        if (args == "" || args.find(",") != args.npos || std::stoi(args) > DEFAULT_BOARD_SIZE) {
-            board.setBoard(std::stoi(args));
-        } else {
-            BrainCommand::ERROR("unsupported size or other error");
-        }
-    } catch (const std::invalid_argument &e) {
-        BrainCommand::ERROR("unsupported size or other error");
-    }
     Printer::print("turn");
 }
 
@@ -94,17 +80,17 @@ void Command::_board(std::string args, Board &board)
         if (cmd == "DONE")
             break;
         try {
-            if (cmd.find(",") != cmd.npos)
+            if (cmd.find(",") != cmd.npos && std::stoi(cmd.substr(0, cmd.find(","))) <= DEFAULT_BOARD_SIZE)
                 x = std::stoi(cmd.substr(0, cmd.find(",")));
             else
                 continue;
             cmd = cmd.substr(cmd.find(",") + 1, cmd.size() - (cmd.find(",") + 1));
-            if (cmd.find(",") != cmd.npos)
+            if (cmd.find(",") != cmd.npos && std::stoi(cmd.substr(0, cmd.find(","))) <= DEFAULT_BOARD_SIZE)
                 y = std::stoi(cmd.substr(0, cmd.find(",")));
             else
                 continue;
             cmd = cmd.substr(cmd.find(",") + 1, cmd.size() - (cmd.find(",") + 1));
-            if (cmd.size() > 0)
+            if (cmd.size() > 0 && (std::stoi(cmd) == 1 || std::stoi(cmd) == 2))
                 field = std::stoi(cmd);
             else
                 continue;
