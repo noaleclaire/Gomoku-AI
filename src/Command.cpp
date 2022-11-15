@@ -77,7 +77,9 @@ void Command::_turn(std::string args, Board &board)
 
 void Command::_begin(std::string args, Board &board)
 {
-    Printer::print("begin");
+    Printer::print("begin");//a enlever
+    // if (board.isGameStarted())
+    //    IA
 }
 
 void Command::_board(std::string args, Board &board)
@@ -126,5 +128,5 @@ void Command::_end(std::string args, Board &board)
 
 void Command::_about(std::string args, Board &board)
 {
-    Printer::print("about");
+    Printer::print("name=\"TROUVER UN NOM\", version=\"1.0\", author=\"NEM\", country=\"France\"");
 }
