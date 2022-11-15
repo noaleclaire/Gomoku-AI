@@ -26,7 +26,7 @@ bool Board::isGameStarted() const
 /* Setter */
 void Board::setBoard(std::size_t size)
 {
-    if (!empty()) {
+    if (_gameStarted) {
         BrainCommand::ERROR("unsupported size or other error");
         return;
     }
@@ -45,4 +45,14 @@ void Board::setPos(CellState cell, std::size_t x, std::size_t y)
     if (!_gameStarted)
         return;
     _board.at(x).at(y) = cell;
+}
+
+void Board::stopGame()
+{
+    if (_gameStarted) {
+        for (auto &it : _board)
+            it.clear();
+        _board.clear();
+    }
+    _gameStarted = false;
 }

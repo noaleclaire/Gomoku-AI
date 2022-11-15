@@ -137,6 +137,7 @@ void Command::_info(std::string args, Board &board)
 void Command::_end(std::string args, Board &board)
 {
     Printer::print("end");//a enlever
+    board.stopGame();
 }
 
 void Command::_about(std::string args, Board &board)
