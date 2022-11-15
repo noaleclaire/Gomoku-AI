@@ -11,6 +11,7 @@
 #include "../include/Printer.hpp"
 #include "../include/exceptions/ExceptionCommandNotFound.hpp"
 
+#include <algorithm>
 #include <cmath>
 #include <functional>
 #include <iostream>
@@ -118,12 +119,18 @@ void Command::_board(std::string args, Board &board)
 
 void Command::_info(std::string args, Board &board)
 {
-    Printer::print("info");
+    Printer::print("info");//a enlever
+    // std::vector<std::string> keywords = {"timeout_turn", "timeout_match", "max_memory", "time_left", "game_type", "rule", "evaluate", "folder"};
+    std::vector<std::string> keywords = {"timeout_turn", "max_memory", "game_type"};
+
+    if (std::find(keywords.begin(), keywords.end(), args) != keywords.end()) {
+
+    }
 }
 
 void Command::_end(std::string args, Board &board)
 {
-    Printer::print("end");
+    Printer::print("end");//a enlever
 }
 
 void Command::_about(std::string args, Board &board)

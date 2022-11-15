@@ -9,6 +9,7 @@ SRC			=	main.cpp				\
 				src/Board.cpp			\
 				src/BrainCommand.cpp	\
 				src/Command.cpp			\
+				src/Info.cpp			\
 
 OBJ			=	$(SRC:%.cpp=%.o)
 

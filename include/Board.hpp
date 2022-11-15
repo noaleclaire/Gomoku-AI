@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "Info.hpp"
+
 #include <string>
 #include <vector>
 
@@ -27,5 +29,6 @@ class Board {
 
     private:
         std::vector<std::vector<CellState>> _board;
+        Info _gameInfos;
         bool _gameStarted;
 };

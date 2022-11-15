@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include "../include/Board.hpp"
+#include "Board.hpp"
+#include "Info.hpp"
 
 #include <string>
 
