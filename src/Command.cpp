@@ -25,8 +25,7 @@ void Command::execCommand(std::string line, Board &board)
             {"BOARD", &_board}, {"INFO", &_info}, {"END", &_end}, {"ABOUT", &_about}};
         MapCall::const_iterator call;
 
-        std::string cmd = "";
-        std::string args = "";
+        std::string cmd, args = "";
         if (line.find(" ") == line.npos)
             cmd = line;
         else {
@@ -56,10 +55,24 @@ void Command::_start(std::string args, Board &board)
 
 void Command::_turn(std::string args, Board &board)
 {
-    std::size_t x = 0;
-    std::size_t y = 0;
+    Printer::print("turn");//a enlever
+    std::size_t x, y = 0;
 
-    Printer::print("turn");
+    try {
+        if (args.find(",") != args.npos && std::stoi(args.substr(0, args.find(","))) < DEFAULT_BOARD_SIZE) {
+            x = std::stoi(args.substr(0, args.find(",")));
+        } else {
+            return;
+        }
+        args = args.substr(0, args.find(","));
+        if (args.find(",") != args.npos && std::stoi(args) < DEFAULT_BOARD_SIZE) {
+            y = std::stoi(args);
+        } else {
+            return;
+        }
+        board.setPos(Board::CellState::FIRST_PLAYER, x, y);
+        //IA
+    } catch (const std::invalid_argument &e) {}
 }
 
 void Command::_begin(std::string args, Board &board)
@@ -69,6 +82,7 @@ void Command::_begin(std::string args, Board &board)
 
 void Command::_board(std::string args, Board &board)
 {
+    Printer::print("board");//a enlever
     std::string cmd = "";
     std::size_t x, y, field = 0;
 
@@ -80,12 +94,12 @@ void Command::_board(std::string args, Board &board)
         if (cmd == "DONE")
             break;
         try {
-            if (cmd.find(",") != cmd.npos && std::stoi(cmd.substr(0, cmd.find(","))) <= DEFAULT_BOARD_SIZE)
+            if (cmd.find(",") != cmd.npos && std::stoi(cmd.substr(0, cmd.find(","))) < DEFAULT_BOARD_SIZE)
                 x = std::stoi(cmd.substr(0, cmd.find(",")));
             else
                 continue;
             cmd = cmd.substr(cmd.find(",") + 1, cmd.size() - (cmd.find(",") + 1));
-            if (cmd.find(",") != cmd.npos && std::stoi(cmd.substr(0, cmd.find(","))) <= DEFAULT_BOARD_SIZE)
+            if (cmd.find(",") != cmd.npos && std::stoi(cmd.substr(0, cmd.find(","))) < DEFAULT_BOARD_SIZE)
                 y = std::stoi(cmd.substr(0, cmd.find(",")));
             else
                 continue;
@@ -97,6 +111,7 @@ void Command::_board(std::string args, Board &board)
             board.setPos(static_cast<Board::CellState>(field), x, y);
         } catch (const std::invalid_argument &e) {}
     }
+    Printer::print("done");// a enlever
 }
 
 void Command::_info(std::string args, Board &board)
