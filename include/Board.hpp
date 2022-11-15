@@ -11,8 +11,9 @@
 #include <vector>
 
 class Board {
-    enum CellState { EMPTY, FIRST_PLAYER, SECOND_PLAYER };
     public:
+        enum CellState { EMPTY, FIRST_PLAYER, SECOND_PLAYER };
+
         Board();
         ~Board() = default;
 
