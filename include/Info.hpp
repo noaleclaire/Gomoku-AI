@@ -18,6 +18,7 @@ class Info {
         /* Getter */
 
         /* Setter */
+        void set(std::string keyword);
 
     private:
         std::map<std::string, std::size_t> _infos;
