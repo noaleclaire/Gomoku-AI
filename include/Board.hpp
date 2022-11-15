@@ -25,6 +25,7 @@ class Board {
 
         /* Setter */
         void setBoard(std::size_t size);
+        void setInfo(std::string keyword, std::size_t value);
         void setPos(CellState cell, std::size_t x, std::size_t y);
 
     private:

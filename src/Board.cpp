@@ -35,6 +35,11 @@ void Board::setBoard(std::size_t size)
     _gameStarted = true;
 }
 
+void Board::setInfo(std::string keyword, std::size_t value)
+{
+    _gameInfos.set(keyword, value);
+}
+
 void Board::setPos(CellState cell, std::size_t x, std::size_t y)
 {
     if (!_gameStarted)
