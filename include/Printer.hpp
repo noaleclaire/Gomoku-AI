@@ -11,20 +11,24 @@
 
 class Printer {
     public:
-        static void print() {};
+        static void print()
+        {
+            std::cout << std::endl;
+        };
         template <class T, class... Params>
         static void print(const T &first, Params &&...args)
         {
             std::cout << first << std::flush;
             print(args...);
-            std::cout << std::endl;
         }
-        static void printErr() {};
+        static void printErr()
+        {
+            std::cerr << std::endl;
+        };
         template <class T, class... Params>
         static void printErr(const T &first, Params &&...args)
         {
             std::cerr << first << std::flush;
             print(args...);
-            std::cerr << std::endl;
         }
 };
