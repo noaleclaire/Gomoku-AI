@@ -10,7 +10,6 @@
 #include "../include/Command.hpp"
 #include "../include/define.hpp"
 #include "../include/Printer.hpp"
-#include "../include/exceptions/ExceptionCommandNotFound.hpp"
 
 #include <cmath>
 #include <functional>
@@ -37,7 +36,6 @@ void Command::execCommand(std::string line, Board &board)
         if (call != creator.end()) {
             return (call->second(args, board));
         }
-        throw ExceptionCommandNotFound("This command doesn't exist in ", "void Command::execCommand(std::string cmd)");
 }
 
 void Command::_start(std::string args, Board &board)
