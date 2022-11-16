@@ -35,6 +35,15 @@ bool Board::isGameStarted() const
 }
 
 /* Setter */
+void Board::resetBoard()
+{
+    for (auto &it : _board)
+        it.clear();
+    _board.clear();
+    for (std::size_t idx = 0; idx < _size; idx++)
+        _board.push_back(std::vector<CellState>(_size, CellState::EMPTY));
+}
+
 bool Board::setBoard(std::size_t size)
 {
     if (_gameStarted) {
@@ -44,6 +53,7 @@ bool Board::setBoard(std::size_t size)
     for (std::size_t idx = 0; idx < size; idx++)
         _board.push_back(std::vector<CellState>(size, CellState::EMPTY));
     _gameStarted = true;
+    _size = size;
     return (true);
 }
 

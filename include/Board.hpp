@@ -24,6 +24,7 @@ class Board {
         bool isGameStarted() const;
 
         /* Setter */
+        void resetBoard();
         bool setBoard(std::size_t size);
         void setInfo(std::string keyword, std::size_t value);
         bool setPos(CellState field, std::size_t x, std::size_t y);
@@ -33,4 +34,5 @@ class Board {
         std::pair<std::vector<std::pair<std::size_t, std::size_t>>, std::vector<std::pair<std::size_t, std::size_t>>> _playersPos;
         Info _gameInfos;
         bool _gameStarted;
+        std::size_t _size;
 };

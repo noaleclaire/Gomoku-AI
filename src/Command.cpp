@@ -22,7 +22,8 @@ typedef std::map<std::string, fptr> MapCall;
 void Command::execCommand(std::string line, Board &board)
 {
         MapCall creator = {{"START", &_start}, {"TURN", &_turn}, {"BEGIN", &_begin},
-            {"BOARD", &_board}, {"INFO", &_info}, {"END", &_end}, {"ABOUT", &_about}};
+            {"BOARD", &_board}, {"INFO", &_info}, {"END", &_end}, {"ABOUT", &_about},
+            {"RESTART", &_restart}};
         MapCall::const_iterator call;
         std::string cmd = "", args = "";
 
@@ -144,6 +145,12 @@ void Command::_about(std::string args, Board &board)
     static_cast<void>(args);
     static_cast<void>(board);
     Printer::print("name=\"TROUVER UN NOM\", version=\"1.0\", author=\"NEM\", country=\"France\"");
+}
+
+void Command::_restart(std::string args, Board &board)
+{
+    static_cast<void>(args);
+    board.resetBoard();
 }
 
 std::size_t Command::_convert(std::string str)
