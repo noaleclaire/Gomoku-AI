@@ -42,9 +42,7 @@ void Command::_start(std::string args, Board &board)
 {
     try {
         if (std::stoi(args) == DEFAULT_BOARD_SIZE) {
-            // if (board.setBoard(_convert(args)))
-            //     Printer::print("OK - everything is good");
-            if (board.setBoard(std::stoi(args)))
+            if (board.setBoard(_convert(args)))
                 Printer::print("OK - everything is good");
         } else {
             BrainCommand::ERROR("unsupported size or other error");
@@ -107,7 +105,7 @@ void Command::_board(std::string args, Board &board)
             else
                 continue;
             cmd = cmd.substr(cmd.find(",") + 1, cmd.size() - (cmd.find(",") + 1));
-            if (cmd.size() > 0 && (std::stoi(cmd) == 1 || std::stoi(cmd) == 2))
+            if ((std::stoi(cmd) == 1 || std::stoi(cmd) == 2))
                 field = _convert(cmd);
             else
                 continue;
