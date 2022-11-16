@@ -19,15 +19,16 @@ bool Board::isGameStarted() const
 }
 
 /* Setter */
-void Board::setBoard(std::size_t size)
+bool Board::setBoard(std::size_t size)
 {
     if (_gameStarted) {
         BrainCommand::ERROR("unsupported size or other error");
-        return;
+        return (false);
     }
     for (std::size_t idx = 0; idx < size; idx++)
         _board.push_back(std::vector<CellState>(size, CellState::EMPTY));
     _gameStarted = true;
+    return (true);
 }
 
 void Board::setInfo(std::string keyword, std::size_t value)
@@ -44,14 +45,4 @@ bool Board::setPos(CellState cell, std::size_t x, std::size_t y)
         return (true);
     }
     return (false);
-}
-
-void Board::stopGame()
-{
-    if (_gameStarted) {
-        for (auto &it : _board)
-            it.clear();
-        _board.clear();
-    }
-    _gameStarted = false;
 }

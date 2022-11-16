@@ -42,8 +42,8 @@ void Command::_start(std::string args, Board &board)
 {
     try {
         if (args.find(" ") == args.npos && std::stoi(args) == DEFAULT_BOARD_SIZE) {
-            board.setBoard(_convert(args));
-            Printer::print("OK - everything is good");
+            if (board.setBoard(_convert(args)))
+                Printer::print("OK - everything is good");
         } else {
             BrainCommand::ERROR("unsupported size or other error");
         }
@@ -132,7 +132,7 @@ void Command::_info(std::string args, Board &board)
 
 void Command::_end(std::string args, Board &board)
 {
-    board.stopGame();
+    exit(0);
 }
 
 void Command::_about(std::string args, Board &board)
