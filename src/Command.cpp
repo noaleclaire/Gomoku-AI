@@ -33,6 +33,8 @@ void Command::execCommand(std::string line, Board &board)
             cmd = line.substr(0, line.find(" "));
             args = line.substr(line.find(" ") + 1, line.size());
         }
+        BrainCommand::DEBUG(cmd);
+        BrainCommand::DEBUG(" " + args);
         call = creator.find(cmd);
         if (call != creator.end()) {
             return (call->second(args, board));
