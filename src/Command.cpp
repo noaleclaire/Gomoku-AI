@@ -43,9 +43,8 @@ void Command::execCommand(std::string line, Board &board)
 void Command::_start(std::string args, Board &board)
 {
     try {
-        _containsOnlyDigits(args);
         if (args.find(" ") == args.npos && std::stoi(args) == DEFAULT_BOARD_SIZE) {
-            board.setBoard(std::stoi(args));
+            board.setBoard(_convert(args));
             Printer::print("OK - everything is good");
         } else {
             BrainCommand::ERROR("unsupported size or other error");
@@ -60,16 +59,14 @@ void Command::_turn(std::string args, Board &board)
     std::size_t x, y = 0;
 
     try {
-        _containsOnlyDigits(args.substr(0, args.find(",")));
         if (args.find(",") != args.npos && std::stoi(args.substr(0, args.find(","))) < DEFAULT_BOARD_SIZE) {
-            x = std::stoi(args.substr(0, args.find(",")));
+            x = _convert(args.substr(0, args.find(",")));
         } else {
             return;
         }
         args = args.substr(args.find(",") + 1, args.size() - (args.find(",") + 1));
-        _containsOnlyDigits(args);
         if (std::stoi(args) < DEFAULT_BOARD_SIZE) {
-            y = std::stoi(args);
+            y = _convert(args);
         } else {
             return;
         }
@@ -97,21 +94,18 @@ void Command::_board(std::string args, Board &board)
         if (cmd == "DONE")
             break;
         try {
-            _containsOnlyDigits(cmd.substr(0, cmd.find(",")));
             if (cmd.find(",") != cmd.npos && std::stoi(cmd.substr(0, cmd.find(","))) < DEFAULT_BOARD_SIZE)
-                x = std::stoi(cmd.substr(0, cmd.find(",")));
+                x = _convert(cmd.substr(0, cmd.find(",")));
             else
                 continue;
             cmd = cmd.substr(cmd.find(",") + 1, cmd.size() - (cmd.find(",") + 1));
-            _containsOnlyDigits(cmd.substr(0, cmd.find(",")));
             if (cmd.find(",") != cmd.npos && std::stoi(cmd.substr(0, cmd.find(","))) < DEFAULT_BOARD_SIZE)
-                y = std::stoi(cmd.substr(0, cmd.find(",")));
+                y = _convert(cmd.substr(0, cmd.find(",")));
             else
                 continue;
             cmd = cmd.substr(cmd.find(",") + 1, cmd.size() - (cmd.find(",") + 1));
-            _containsOnlyDigits(cmd);
             if (cmd.size() > 0 && (std::stoi(cmd) == 1 || std::stoi(cmd) == 2))
-                field = std::stoi(cmd);
+                field = _convert(cmd);
             else
                 continue;
             board.setPos(static_cast<Board::CellState>(field), x, y);
@@ -132,8 +126,7 @@ void Command::_info(std::string args, Board &board)
         return;
     }
     try {
-        _containsOnlyDigits(args);
-        value = std::stoi(args);
+        value = _convert(args);
         board.setInfo(keyword, value);
     } catch (const std::invalid_argument &e) {}
 }
@@ -148,10 +141,11 @@ void Command::_about(std::string args, Board &board)
     Printer::print("name=\"TROUVER UN NOM\", version=\"1.0\", author=\"NEM\", country=\"France\"");
 }
 
-void Command::_containsOnlyDigits(std::string str)
+std::size_t Command::_convert(std::string str)
 {
     for (auto &it : str) {
         if (it < '0' || it > '9')
             throw std::invalid_argument("");
     }
+    return (std::stoi(str));
 }
