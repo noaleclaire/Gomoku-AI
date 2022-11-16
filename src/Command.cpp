@@ -135,6 +135,7 @@ void Command::_info(std::string args, Board &board)
 void Command::_end(std::string args, Board &board)
 {
     static_cast<void>(args);
+    static_cast<void>(board);
     exit(0);
 }
 

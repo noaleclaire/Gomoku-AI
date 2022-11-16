@@ -16,14 +16,15 @@ OBJ			=	$(SRC:%.cpp=%.o)
 
 CFLAGS 		=	-std=c++20 -Wall -Wextra
 
-CC = g++
+CC			=	g++
 
 NAME		=	pbrain-gomoku-ai
+
 RM 			=  	rm -f
 
 ifeq ($(OS),Windows_NT)
-	NAME		=	pbrain-gomoku-ai.exe
-	RM 			= del
+	NAME	=	pbrain-gomoku-ai.exe
+	RM 		=	del
 endif
 
 all: $(NAME)
