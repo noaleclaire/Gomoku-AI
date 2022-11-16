@@ -56,18 +56,22 @@ bool Board::setPos(CellState field, std::size_t x, std::size_t y)
 {
     if (!_gameStarted)
         return false;
-    if (_board.at(x).at(y) == CellState::EMPTY) {
-        _board.at(x).at(y) = field;
-        switch (field) {
-            case CellState::FIRST_PLAYER:
-                _playersPos.first.push_back({x, y});
-                break;
-            case CellState::SECOND_PLAYER:
-                _playersPos.second.push_back({x, y});
-                break;
-            default: break;
+    try {
+        if (_board.at(x).at(y) == CellState::EMPTY) {
+            _board.at(x).at(y) = field;
+            switch (field) {
+                case CellState::FIRST_PLAYER:
+                    _playersPos.first.push_back({x, y});
+                    break;
+                case CellState::SECOND_PLAYER:
+                    _playersPos.second.push_back({x, y});
+                    break;
+                default: break;
+            }
+            return (true);
         }
-        return (true);
+    } catch (const std::out_of_range &e) {
+        return (false);
     }
     return (false);
 }
