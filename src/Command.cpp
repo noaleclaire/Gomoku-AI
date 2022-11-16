@@ -70,8 +70,9 @@ void Command::_turn(std::string args, Board &board)
         } else {
             return;
         }
-        if (board.setPos(Board::CellState::FIRST_PLAYER, x, y))
+        if (board.setPos(Board::CellState::FIRST_PLAYER, x, y)) {
             AI::turn(board);
+        }
     } catch (const std::invalid_argument &e) {}
 }
 
@@ -118,7 +119,6 @@ void Command::_info(std::string args, Board &board)
 {
     std::string keyword = "";
     std::size_t value = 0;
-    // std::vector<std::string> keywords = {"timeout_turn", "timeout_match", "max_memory", "time_left", "game_type", "rule", "evaluate", "folder"};
 
     if (args.find(" ") != args.npos) {
         keyword = args.substr(0, args.find(" "));

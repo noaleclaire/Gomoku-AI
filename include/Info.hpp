@@ -19,9 +19,7 @@ class Info {
 
         /* Setter */
         void set(std::string keyword, std::size_t value);
-        // void set(std::string keyword, std::any value);
 
     private:
         std::map<std::string, std::size_t> _infos;
-        // std::map<std::string, std::any> _infos; -> si folder et evaluation
 };
