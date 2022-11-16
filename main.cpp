@@ -7,12 +7,10 @@
 
 #include "include/Command.hpp"
 #include "include/Printer.hpp"
-#include "include/exceptions/Exception.hpp"
-#include "include/exceptions/ExceptionCommandNotFound.hpp"
 
 #include <iostream>
 
-int main(int ac, char **av)
+int main(void)
 {
     std::string cmd = "";
     Board board;
@@ -24,8 +22,7 @@ int main(int ac, char **av)
             continue;
         try {
             Command::execCommand(cmd, board);
-        } catch (const ExceptionCommandNotFound &e) {
-        } catch (const Exception &e) {}
+        } catch (const std::exception &e) {}
     }
     return (0);
 }

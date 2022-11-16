@@ -24,4 +24,6 @@ class Command {
         static void _info(std::string args, Board &board);
         static void _end(std::string args, Board &board);
         static void _about(std::string args, Board &board);
+        static void _containsOnlyDigits(std::string str);
+        static std::size_t _convert(std::string str);
 };

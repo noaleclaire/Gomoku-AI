@@ -11,10 +11,12 @@
 
 void AI::turn(Board &board)
 {
-    // std::size_t x, y = 0;
-    std::size_t x, y = std::rand()%DEFAULT_BOARD_SIZE - 1;
+    // std::size_t x = 0, y = 0;
+    std::size_t x = std::rand()%DEFAULT_BOARD_SIZE - 1, y = std::rand()%DEFAULT_BOARD_SIZE - 1;
 
-    while (!board.setPos(Board::CellState::SECOND_PLAYER, x, y))
-        x, y = std::rand()%DEFAULT_BOARD_SIZE - 1;
+    while (!board.setPos(Board::CellState::SECOND_PLAYER, x, y)) {
+        x = std::rand()%DEFAULT_BOARD_SIZE - 1;
+        y = std::rand()%DEFAULT_BOARD_SIZE - 1;
+    }
     Printer::print(x, ",", y);
 }

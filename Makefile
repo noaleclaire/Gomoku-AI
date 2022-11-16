@@ -6,7 +6,7 @@
 ##
 
 SRC			=	main.cpp				\
-				src/AI.cpp			\
+				src/AI.cpp				\
 				src/Board.cpp			\
 				src/BrainCommand.cpp	\
 				src/Command.cpp			\
