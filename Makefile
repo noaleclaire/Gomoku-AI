@@ -16,16 +16,20 @@ OBJ			=	$(SRC:%.cpp=%.o)
 
 CFLAGS 		=	-std=c++20 -Wall -Wextra
 
-NAME		=	pbrain-gomoku-ai
-
 CC = g++
 
-RM = rm -f
+NAME		=	pbrain-gomoku-ai
+RM 			=  	rm -f
+
+ifeq ($(OS),Windows_NT)
+	NAME		=	pbrain-gomoku-ai.exe
+	RM 			= del
+endif
 
 all: $(NAME)
 
 $(NAME) :
-		$(CC) $(SRC) -o $(NAME)
+		$(CC) $(SRC) -o $(NAME) $(CFLAGS)
 
 clean :
 			$(RM) $(OBJ)
