@@ -24,8 +24,8 @@ void Command::execCommand(std::string line, Board &board)
         MapCall creator = {{"START", &_start}, {"TURN", &_turn}, {"BEGIN", &_begin},
             {"BOARD", &_board}, {"INFO", &_info}, {"END", &_end}, {"ABOUT", &_about}};
         MapCall::const_iterator call;
+        std::string cmd = "", args = "";
 
-        std::string cmd, args = "";
         if (line.find(" ") == line.npos)
             cmd = line;
         else {
@@ -54,7 +54,7 @@ void Command::_start(std::string args, Board &board)
 
 void Command::_turn(std::string args, Board &board)
 {
-    std::size_t x, y = 0;
+    std::size_t x = 0, y = 0;
 
     try {
         if (args.find(",") != args.npos && std::stoi(args.substr(0, args.find(","))) < DEFAULT_BOARD_SIZE) {
@@ -83,7 +83,7 @@ void Command::_begin(std::string args, Board &board)
 void Command::_board(std::string args, Board &board)
 {
     std::string cmd = "";
-    std::size_t x, y, field = 0;
+    std::size_t x = 0, y = 0, field = 0;
 
     while (1) {
         std::cin.clear();
