@@ -20,15 +20,17 @@ class Board {
         ~Board() = default;
 
         /* Getter */
+        std::vector<std::pair<std::size_t, std::size_t>> getPlayerPos(CellState field) const;
         bool isGameStarted() const;
 
         /* Setter */
         bool setBoard(std::size_t size);
         void setInfo(std::string keyword, std::size_t value);
-        bool setPos(CellState cell, std::size_t x, std::size_t y);
+        bool setPos(CellState field, std::size_t x, std::size_t y);
 
     private:
         std::vector<std::vector<CellState>> _board;
+        std::pair<std::vector<std::pair<std::size_t, std::size_t>>, std::vector<std::pair<std::size_t, std::size_t>>> _playersPos;
         Info _gameInfos;
         bool _gameStarted;
 };

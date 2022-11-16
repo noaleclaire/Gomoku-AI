@@ -76,6 +76,7 @@ void Command::_turn(std::string args, Board &board)
 
 void Command::_begin(std::string args, Board &board)
 {
+    static_cast<void>(args);
     if (board.isGameStarted())
         AI::turn(board);
 }
@@ -85,6 +86,7 @@ void Command::_board(std::string args, Board &board)
     std::string cmd = "";
     std::size_t x = 0, y = 0, field = 0;
 
+    static_cast<void>(args);
     while (1) {
         std::cin.clear();
         std::getline(std::cin, cmd);
@@ -132,11 +134,14 @@ void Command::_info(std::string args, Board &board)
 
 void Command::_end(std::string args, Board &board)
 {
+    static_cast<void>(args);
     exit(0);
 }
 
 void Command::_about(std::string args, Board &board)
 {
+    static_cast<void>(args);
+    static_cast<void>(board);
     Printer::print("name=\"TROUVER UN NOM\", version=\"1.0\", author=\"NEM\", country=\"France\"");
 }
 
@@ -144,7 +149,7 @@ std::size_t Command::_convert(std::string str)
 {
     for (auto &it : str) {
         if (it < '0' || it > '9')
-            throw std::invalid_argument("");
+            throw std::invalid_argument("{ERROR} The string doesn't contain only digit");
     }
     return (std::stoi(str));
 }

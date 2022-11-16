@@ -10,7 +10,7 @@
 
 #include <iostream>
 
-int main(int ac, char **av)
+int main(void)
 {
     std::string cmd = "";
     Board board;
