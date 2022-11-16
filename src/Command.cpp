@@ -56,7 +56,6 @@ void Command::_start(std::string args, Board &board)
 
 void Command::_turn(std::string args, Board &board)
 {
-    Printer::print("turn");//a enlever
     std::size_t x, y = 0;
 
     try {
@@ -78,7 +77,6 @@ void Command::_turn(std::string args, Board &board)
 
 void Command::_begin(std::string args, Board &board)
 {
-    Printer::print("begin");//a enlever
     if (board.isGameStarted())
         AI::turn(board);
 }
@@ -117,7 +115,6 @@ void Command::_board(std::string args, Board &board)
 
 void Command::_info(std::string args, Board &board)
 {
-    Printer::print("info");//a enlever
     std::string keyword = "";
     std::size_t value = 0;
     // std::vector<std::string> keywords = {"timeout_turn", "timeout_match", "max_memory", "time_left", "game_type", "rule", "evaluate", "folder"};
@@ -136,7 +133,6 @@ void Command::_info(std::string args, Board &board)
 
 void Command::_end(std::string args, Board &board)
 {
-    Printer::print("end");//a enlever
     board.stopGame();
 }
 
