@@ -32,11 +32,16 @@ all: $(NAME)
 $(NAME) :
 		$(CC) $(SRC) -o $(NAME) $(CFLAGS)
 
+ifeq ($(OS), Windows_NT)
 clean :
-		$(RM) $(OBJ)
-
+	$(RM) $(NAME)
 fclean : clean
-		$(RM) $(NAME)
+else
+clean :
+	$(RM) $(OBJ)
+fclean : clean
+	$(RM) $(NAME)
+endif
 
 re:		 fclean all
 
