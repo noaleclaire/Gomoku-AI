@@ -43,6 +43,7 @@ void Command::execCommand(std::string line, Board &board)
 void Command::_start(std::string args, Board &board)
 {
     try {
+        _containsOnlyDigits(args);
         if (args.find(" ") == args.npos && std::stoi(args) == DEFAULT_BOARD_SIZE) {
             board.setBoard(std::stoi(args));
             Printer::print("OK - everything is good");
@@ -59,12 +60,14 @@ void Command::_turn(std::string args, Board &board)
     std::size_t x, y = 0;
 
     try {
+        _containsOnlyDigits(args.substr(0, args.find(",")));
         if (args.find(",") != args.npos && std::stoi(args.substr(0, args.find(","))) < DEFAULT_BOARD_SIZE) {
             x = std::stoi(args.substr(0, args.find(",")));
         } else {
             return;
         }
         args = args.substr(args.find(",") + 1, args.size() - (args.find(",") + 1));
+        _containsOnlyDigits(args);
         if (std::stoi(args) < DEFAULT_BOARD_SIZE) {
             y = std::stoi(args);
         } else {
@@ -94,16 +97,19 @@ void Command::_board(std::string args, Board &board)
         if (cmd == "DONE")
             break;
         try {
+            _containsOnlyDigits(cmd.substr(0, cmd.find(",")));
             if (cmd.find(",") != cmd.npos && std::stoi(cmd.substr(0, cmd.find(","))) < DEFAULT_BOARD_SIZE)
                 x = std::stoi(cmd.substr(0, cmd.find(",")));
             else
                 continue;
             cmd = cmd.substr(cmd.find(",") + 1, cmd.size() - (cmd.find(",") + 1));
+            _containsOnlyDigits(cmd.substr(0, cmd.find(",")));
             if (cmd.find(",") != cmd.npos && std::stoi(cmd.substr(0, cmd.find(","))) < DEFAULT_BOARD_SIZE)
                 y = std::stoi(cmd.substr(0, cmd.find(",")));
             else
                 continue;
             cmd = cmd.substr(cmd.find(",") + 1, cmd.size() - (cmd.find(",") + 1));
+            _containsOnlyDigits(cmd);
             if (cmd.size() > 0 && (std::stoi(cmd) == 1 || std::stoi(cmd) == 2))
                 field = std::stoi(cmd);
             else
@@ -126,6 +132,7 @@ void Command::_info(std::string args, Board &board)
         return;
     }
     try {
+        _containsOnlyDigits(args);
         value = std::stoi(args);
         board.setInfo(keyword, value);
     } catch (const std::invalid_argument &e) {}
@@ -139,4 +146,12 @@ void Command::_end(std::string args, Board &board)
 void Command::_about(std::string args, Board &board)
 {
     Printer::print("name=\"TROUVER UN NOM\", version=\"1.0\", author=\"NEM\", country=\"France\"");
+}
+
+void Command::_containsOnlyDigits(std::string str)
+{
+    for (auto &it : str) {
+        if (it < '0' || it > '9')
+            throw std::invalid_argument("");
+    }
 }
