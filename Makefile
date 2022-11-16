@@ -33,11 +33,11 @@ $(NAME) :
 		$(CC) $(SRC) -o $(NAME) $(CFLAGS)
 
 clean :
-			$(RM) $(OBJ)
+		$(RM) $(OBJ)
 
-fclean :	clean
-			$(RM) $(NAME)
+fclean : clean
+		$(RM) $(NAME)
 
-re:			fclean all
+re:		 fclean all
 
 .PHONY:	all core games graphicals clean fclean re
