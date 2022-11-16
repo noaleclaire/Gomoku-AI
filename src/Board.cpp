@@ -40,11 +40,15 @@ void Board::setInfo(std::string keyword, std::size_t value)
     _gameInfos.set(keyword, value);
 }
 
-void Board::setPos(CellState cell, std::size_t x, std::size_t y)
+bool Board::setPos(CellState cell, std::size_t x, std::size_t y)
 {
     if (!_gameStarted)
-        return;
-    _board.at(x).at(y) = cell;
+        return false;
+    if (_board.at(x).at(y) == CellState::EMPTY) {
+        _board.at(x).at(y) = cell;
+        return (true);
+    }
+    return (false);
 }
 
 void Board::stopGame()

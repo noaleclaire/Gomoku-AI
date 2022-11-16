@@ -5,13 +5,13 @@
 ** Command.cpp
 */
 
+#include "../include/AI.hpp"
 #include "../include/BrainCommand.hpp"
 #include "../include/Command.hpp"
 #include "../include/define.hpp"
 #include "../include/Printer.hpp"
 #include "../include/exceptions/ExceptionCommandNotFound.hpp"
 
-#include <algorithm>
 #include <cmath>
 #include <functional>
 #include <iostream>
@@ -71,16 +71,16 @@ void Command::_turn(std::string args, Board &board)
         } else {
             return;
         }
-        board.setPos(Board::CellState::FIRST_PLAYER, x, y);
-        //IA
+        if (board.setPos(Board::CellState::FIRST_PLAYER, x, y))
+            AI::turn(board);
     } catch (const std::invalid_argument &e) {}
 }
 
 void Command::_begin(std::string args, Board &board)
 {
     Printer::print("begin");//a enlever
-    // if (board.isGameStarted())
-    //    IA
+    if (board.isGameStarted())
+        AI::turn(board);
 }
 
 void Command::_board(std::string args, Board &board)
