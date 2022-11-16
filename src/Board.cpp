@@ -13,11 +13,6 @@ Board::Board() : _gameStarted(false)
 }
 
 /* Getter */
-bool Board::empty() const
-{
-    return (_board.empty());
-}
-
 bool Board::isGameStarted() const
 {
     return (_gameStarted);

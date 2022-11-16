@@ -20,7 +20,6 @@ class Board {
         ~Board() = default;
 
         /* Getter */
-        bool empty() const;
         bool isGameStarted() const;
 
         /* Setter */
