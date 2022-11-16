@@ -6,7 +6,7 @@
 ##
 
 SRC			=	main.cpp				\
-				src/AI.cpp			\
+				src/AI.cpp				\
 				src/Board.cpp			\
 				src/BrainCommand.cpp	\
 				src/Command.cpp			\
@@ -18,9 +18,9 @@ CFLAGS 		=	-std=c++20 -Wall -Wextra
 
 NAME		=	pbrain-gomoku-ai
 
-CC = g++
+CC			= g++
 
-RM = rm -f
+RM			= rm -f
 
 all: $(NAME)
 
