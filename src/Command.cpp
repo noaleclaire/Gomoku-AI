@@ -111,6 +111,7 @@ void Command::_board(std::string args, Board &board)
             board.setPos(static_cast<Board::CellState>(field), x, y);
         } catch (const std::invalid_argument &e) {}
     }
+    AI::turn(board);
 }
 
 void Command::_info(std::string args, Board &board)
