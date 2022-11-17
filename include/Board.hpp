@@ -20,6 +20,7 @@ class Board {
         ~Board() = default;
 
         /* Getter */
+        std::pair<std::size_t, std::size_t> getFieldCell() const;
         bool isGameStarted() const;
 
         /* Setter */

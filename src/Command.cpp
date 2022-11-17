@@ -78,7 +78,7 @@ void Command::_turn(std::string args, Board &board)
 void Command::_begin(std::string args, Board &board)
 {
     static_cast<void>(args);
-    if (board.isGameStarted())
+    if (board.isGameStarted() && board.getFieldCell().first == 0 && board.getFieldCell().second == 0)
         AI::turn(board);
 }
 

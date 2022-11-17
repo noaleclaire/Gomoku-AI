@@ -15,6 +15,21 @@ Board::Board() : _gameStarted(false)
 }
 
 /* Getter */
+std::pair<std::size_t, std::size_t> Board::getFieldCell() const
+{
+    std::pair<std::size_t, std::size_t> fieldCells = {0, 0};
+
+    for (auto &it : _board) {
+        for (auto &elem : it) {
+            if (elem == CellState::FIRST_PLAYER)
+                fieldCells.first++;
+            if (elem == CellState::SECOND_PLAYER)
+                fieldCells.second++;
+        }
+    }
+    return (fieldCells);
+}
+
 bool Board::isGameStarted() const
 {
     return (_gameStarted);
