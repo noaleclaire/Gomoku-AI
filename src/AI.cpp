@@ -33,6 +33,7 @@ void AI::turn(Board &board, std::size_t playerX, std::size_t playerY)
     // } else {
     }
     Printer::print(x, ",", y);
+    board.printBoard();
 }
 
 void AI::_start(Board &board, std::size_t &x, std::size_t &y, std::size_t playerX, std::size_t playerY)
@@ -48,10 +49,10 @@ void AI::_start(Board &board, std::size_t &x, std::size_t &y, std::size_t player
         possibleY.erase(std::find(possibleY.begin(), possibleY.end(), -1));
     if (playerY == DEFAULT_BOARD_SIZE - 1)
         possibleY.erase(std::find(possibleY.begin(), possibleY.end(), 1));
-    x = possibleX.at(std::rand()%possibleX.size());
-    y = possibleY.at(std::rand()%possibleY.size());
+    x = playerX + possibleX.at(std::rand()%possibleX.size());
+    y = playerY + possibleY.at(std::rand()%possibleY.size());
     while (!board.setPos(Board::CellState::SECOND_PLAYER, x, y)) {
-        x = possibleX.at(std::rand()%possibleX.size());
-        y = possibleY.at(std::rand()%possibleY.size());
+        x = playerX + possibleX.at(std::rand()%possibleX.size());
+        y = playerY + possibleY.at(std::rand()%possibleY.size());
     }
 }

@@ -29,6 +29,8 @@ class Board {
         void setInfo(std::string keyword, std::size_t value);
         bool setPos(CellState field, std::size_t x, std::size_t y);
 
+        void printBoard();
+
     private:
         std::vector<std::vector<CellState>> _board;
         Info _gameInfos;

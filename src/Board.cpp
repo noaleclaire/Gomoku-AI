@@ -10,6 +10,8 @@
 
 #include <stdexcept>
 
+#include <iostream>
+
 Board::Board() : _gameStarted(false)
 {
 }
@@ -76,4 +78,19 @@ bool Board::setPos(CellState field, std::size_t x, std::size_t y)
         return (false);
     }
     return (false);
+}
+
+void Board::printBoard()
+{
+    for (auto &it : _board) {
+        for (auto &elem : it) {
+            if (elem == CellState::EMPTY)
+                std::cout << ".";
+            if (elem == CellState::FIRST_PLAYER)
+                std::cout << "O";
+            if (elem == CellState::SECOND_PLAYER)
+                std::cout << "X";
+        }
+        std::cout << std::endl;
+    }
 }

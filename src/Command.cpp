@@ -70,7 +70,7 @@ void Command::_turn(std::string args, Board &board)
             return;
         }
         if (board.setPos(Board::CellState::FIRST_PLAYER, x, y)) {
-            AI::turn(board);
+            AI::turn(board, x, y);
         }
     } catch (const std::invalid_argument &e) {}
 }
