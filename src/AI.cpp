@@ -37,7 +37,7 @@ void AI::turn(Board &board, std::size_t playerX, std::size_t playerY)
         }
     }
     board.setPos(Board::CellState::SECOND_PLAYER, x, y);
-    // board.printBoard();
+    board.printBoard();
     Printer::print(x, ",", y);
 }
 

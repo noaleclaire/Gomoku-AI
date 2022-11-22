@@ -82,30 +82,21 @@ std::vector<Board::CellAttribute> Board::getLine(Direction direction, std::size_
                 yAmplitude.second = DEFAULT_BOARD_SIZE - 1;
             xAmplitude = {midCellX, midCellX};
             break;
-        // case Direction::RIGHTTOLEFT:
-        //     if (static_cast<int>(midCellX) - 4 >= 0)
-        //         xAmplitude.second = midCellX - 4;
-        //     if (midCellX + 4 < DEFAULT_BOARD_SIZE)
-        //         xAmplitude.first = midCellX + 4;
-        //     else
-        //         xAmplitude.second = DEFAULT_BOARD_SIZE - 1;
-        //     if (static_cast<int>(midCellY) - 4 >= 0)
-        //         yAmplitude.first = midCellY - 4;
-        //     if (midCellY + 4 < DEFAULT_BOARD_SIZE)
-        //         yAmplitude.second = midCellY + 4;
-        //     else
-        //         yAmplitude.second = DEFAULT_BOARD_SIZE - 1;
-        //     // for (std::size_t x = xAmplitude.first, y = yAmplitude.first; x >= xAmplitude.second && y <= yAmplitude.second;) {
-        //     //     line.push_back({x, y, _board.at(x).at(y)});
-        //     //     if (xAmplitude.first > xAmplitude.second)
-        //     //         x--;
-        //     //     if (yAmplitude.first < yAmplitude.second)
-        //     //         y++;
-        //     // }
-        //     // return (line);
-        //     break;
-        // case Direction::LEFTTORIGHT:
-        default:
+        case Direction::RIGHTTOLEFT:
+            if (static_cast<int>(midCellX) - 4 >= 0)
+                xAmplitude.second = midCellX - 4;
+            if (midCellX + 4 < DEFAULT_BOARD_SIZE)
+                xAmplitude.first = midCellX + 4;
+            else
+                xAmplitude.second = DEFAULT_BOARD_SIZE - 1;
+            if (static_cast<int>(midCellY) - 4 >= 0)
+                yAmplitude.first = midCellY - 4;
+            if (midCellY + 4 < DEFAULT_BOARD_SIZE)
+                yAmplitude.second = midCellY + 4;
+            else
+                yAmplitude.second = DEFAULT_BOARD_SIZE - 1;
+            break;
+        case Direction::LEFTTORIGHT:
             if (static_cast<int>(midCellX) - 4 >= 0)
                 xAmplitude.first = midCellX - 4;
             if (midCellX + 4 < DEFAULT_BOARD_SIZE)
@@ -119,16 +110,15 @@ std::vector<Board::CellAttribute> Board::getLine(Direction direction, std::size_
             else
                 yAmplitude.second = DEFAULT_BOARD_SIZE - 1;
             break;
-        // default:
-        //     break;
+        default:
+            break;
     }
-    // for (std::size_t x = xAmplitude.first, y = yAmplitude.first; (x <= xAmplitude.second || x >= xAmplitude.second) && y <= yAmplitude.second;) {
-    for (std::size_t x = xAmplitude.first, y = yAmplitude.first; x <= xAmplitude.second && y <= yAmplitude.second;) {
-        line.push_back({x, y, _board.at(y).at(x)});
+    for (int x = 0, y = 0; (xAmplitude.first + x <= xAmplitude.second) && (yAmplitude.first + y <= yAmplitude.second);) {
+        line.push_back({(xAmplitude.first + x), (yAmplitude.first + y), _board.at(yAmplitude.first + y).at(xAmplitude.first + x)});
         if (xAmplitude.first < xAmplitude.second)
             x++;
-        // if (xAmplitude.first > xAmplitude.second)
-        //     x--;
+        if (xAmplitude.first > xAmplitude.second)
+            x--;
         if (yAmplitude.first < yAmplitude.second)
             y++;
     }
