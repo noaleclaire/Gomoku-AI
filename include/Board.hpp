@@ -28,6 +28,7 @@ class Board {
         ~Board() = default;
 
         /* Getter */
+        std::vector<std::vector<CellState>> getBoard() const;
         std::pair<std::size_t, std::size_t> getFieldCell() const;
         std::vector<CellAttribute> getLine(Direction direction, std::size_t midCellX, std::size_t midCellY);
         bool isGameStarted() const;
