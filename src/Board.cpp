@@ -98,6 +98,10 @@ std::vector<Board::CellAttribute> Board::getLine(Direction direction, std::size_
             x++;
         if (yAmplitude.first < yAmplitude.second)
             y++;
+        if (xAmplitude.first > xAmplitude.second)
+            x--;
+        if (yAmplitude.first > yAmplitude.second)
+            y--;
     }
     return (line);
 }
