@@ -5,8 +5,8 @@
 ** BrainCommand.cpp
 */
 
-#include "../include/BrainCommand.hpp"
-#include "../include/Printer.hpp"
+#include "BrainCommand.hpp"
+#include "Printer.hpp"
 
 void BrainCommand::ERROR(std::string error_message)
 {

@@ -5,8 +5,8 @@
 ** main.cpp
 */
 
-#include "include/Command.hpp"
-#include "include/Printer.hpp"
+#include "Command.hpp"
+#include "Printer.hpp"
 
 #include <iostream>
 

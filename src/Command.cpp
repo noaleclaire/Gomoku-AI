@@ -5,11 +5,11 @@
 ** Command.cpp
 */
 
-#include "../include/AI.hpp"
-#include "../include/BrainCommand.hpp"
-#include "../include/Command.hpp"
-#include "../include/define.hpp"
-#include "../include/Printer.hpp"
+#include "AI.hpp"
+#include "BrainCommand.hpp"
+#include "Command.hpp"
+#include "define.hpp"
+#include "Printer.hpp"
 
 #include <cmath>
 #include <functional>
@@ -70,7 +70,7 @@ void Command::_turn(std::string args, Board &board)
             return;
         }
         if (board.setPos(Board::CellState::FIRST_PLAYER, x, y)) {
-            AI::turn(board);
+            AI::turn(board, x, y);
         }
     } catch (const std::invalid_argument &e) {}
 }
@@ -78,7 +78,7 @@ void Command::_turn(std::string args, Board &board)
 void Command::_begin(std::string args, Board &board)
 {
     static_cast<void>(args);
-    if (board.isGameStarted())
+    if (board.isGameStarted() && board.getFieldCell().first == 0 && board.getFieldCell().second == 0)
         AI::turn(board);
 }
 
