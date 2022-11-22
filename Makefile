@@ -14,7 +14,7 @@ SRC			=	main.cpp				\
 
 OBJ			=	$(SRC:%.cpp=%.o)
 
-CFLAGS 		=	-std=c++20 -Wall -Wextra
+CFLAGS 		=	-std=c++20 -Wall -Wextra -I./include
 
 CC			=	g++
 

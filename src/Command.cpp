@@ -5,11 +5,11 @@
 ** Command.cpp
 */
 
-#include "../include/AI.hpp"
-#include "../include/BrainCommand.hpp"
-#include "../include/Command.hpp"
-#include "../include/define.hpp"
-#include "../include/Printer.hpp"
+#include "AI.hpp"
+#include "BrainCommand.hpp"
+#include "Command.hpp"
+#include "define.hpp"
+#include "Printer.hpp"
 
 #include <cmath>
 #include <functional>

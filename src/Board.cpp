@@ -5,8 +5,8 @@
 ** Board.cpp
 */
 
-#include "../include/Board.hpp"
-#include "../include/BrainCommand.hpp"
+#include "Board.hpp"
+#include "BrainCommand.hpp"
 
 #include <stdexcept>
 

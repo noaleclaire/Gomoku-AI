@@ -5,7 +5,7 @@
 ** Info.cpp
 */
 
-#include "../include/Info.hpp"
+#include "Info.hpp"
 
 #include <stdexcept>
 
