@@ -13,27 +13,20 @@
 #include <algorithm>
 #include <cmath>
 
-void AI::turn(Board &board)
-{
-    std::size_t x = std::rand()%static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3)) + static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3));
-    std::size_t y = std::rand()%static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3)) + static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3));
-    std::srand(time(NULL));
-
-    board.setPos(Board::CellState::SECOND_PLAYER, x, y);
-    Printer::print(x, ",", y);
-    // board.printBoard();
-}
-
 void AI::turn(Board &board, std::size_t playerX, std::size_t playerY)
 {
     std::size_t x = 0, y = 0;
     std::pair<std::size_t, std::size_t> fieldCells = board.getFieldCell();
 
-    if (fieldCells.first == 1 && fieldCells.second == 0) {
+    if (fieldCells.first == 0 && fieldCells.second == 0) {
+        x = std::rand()%static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3)) + static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3));
+        y = std::rand()%static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3)) + static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3));
+        std::srand(time(NULL));
+    } else if (fieldCells.first == 1 && fieldCells.second == 0) {
         _start(board, x, y, playerX, playerY);
     } else {
-        if (_attack(board, x, y, playerX, playerY) == false) {
-            if (_defend(board, x, y, playerX, playerY) == false) {
+        if (_attack(board, x, y) == false) {
+            if (_defend(board, x, y) == false) {
                 x = std::rand()%DEFAULT_BOARD_SIZE;
                 y = std::rand()%DEFAULT_BOARD_SIZE;
                 while (!board.setPos(Board::CellState::SECOND_PLAYER, x, y)) {
@@ -42,10 +35,10 @@ void AI::turn(Board &board, std::size_t playerX, std::size_t playerY)
                 }
             }
         }
-        board.setPos(Board::CellState::SECOND_PLAYER, x, y);
     }
-    Printer::print(x, ",", y);
+    board.setPos(Board::CellState::SECOND_PLAYER, x, y);
     // board.printBoard();
+    Printer::print(x, ",", y);
 }
 
 void AI::_start(Board &board, std::size_t &x, std::size_t &y, std::size_t playerX, std::size_t playerY)
@@ -69,27 +62,31 @@ void AI::_start(Board &board, std::size_t &x, std::size_t &y, std::size_t player
     }
 }
 
-bool AI::_attack(Board &board, std::size_t &x, std::size_t &y, std::size_t playerX, std::size_t playerY)
+bool AI::_attack(Board &board, std::size_t &x, std::size_t &y)
 {
     std::vector<Board::CellAttribute> line = {};
     std::vector<Board::Direction> directions = {Board::Direction::HORIZONTAL, Board::Direction::VERTICAL,
                                                 Board::Direction::LEFTTORIGHT, Board::Direction::RIGHTTOLEFT};
 
     for (auto &dir : directions) {
-        line = board.getLine(dir, playerX, playerY);
-        if (line.size() < 5)
-            continue;
-        for (std::size_t lineIndex = 0; line.size() - lineIndex > 5; lineIndex++) {
-            for (auto &pattern : Board::attackPattern) {
-                for (std::size_t ptnIndex = 0; ptnIndex < 5; ptnIndex++) {
-                    if (line.at(lineIndex + ptnIndex).field != pattern.at(ptnIndex))
-                        break;
-                    if (line.at(lineIndex + ptnIndex).field == Board::CellState::EMPTY) {
-                        x = line.at(lineIndex + ptnIndex).posX;
-                        y = line.at(lineIndex + ptnIndex).posY;
+        for (std::size_t i = 0; i < board.getBoard().size(); i++) {
+            for (std::size_t j = 0; j < board.getBoard().at(i).size(); j++) {
+                line = board.getLine(dir, j, i);
+                if (line.size() < 5)
+                    continue;
+                for (std::size_t lineIndex = 0; line.size() - lineIndex > 5; lineIndex++) {
+                    for (auto &pattern : Board::attackPattern) {
+                        for (std::size_t ptnIndex = 0; ptnIndex < 5; ptnIndex++) {
+                            if (line.at(lineIndex + ptnIndex).field != pattern.at(ptnIndex))
+                                break;
+                            if (line.at(lineIndex + ptnIndex).field == Board::CellState::EMPTY) {
+                                x = line.at(lineIndex + ptnIndex).posX;
+                                y = line.at(lineIndex + ptnIndex).posY;
+                            }
+                            if (ptnIndex == 4)
+                                return (true);
+                        }
                     }
-                    if (ptnIndex == 4)
-                        return (true);
                 }
             }
         }
@@ -97,27 +94,31 @@ bool AI::_attack(Board &board, std::size_t &x, std::size_t &y, std::size_t playe
     return (false);
 }
 
-bool AI::_defend(Board &board, std::size_t &x, std::size_t &y, std::size_t playerX, std::size_t playerY)
+bool AI::_defend(Board &board, std::size_t &x, std::size_t &y)
 {
     std::vector<Board::CellAttribute> line = {};
     std::vector<Board::Direction> directions = {Board::Direction::HORIZONTAL, Board::Direction::VERTICAL,
                                                 Board::Direction::LEFTTORIGHT, Board::Direction::RIGHTTOLEFT};
 
     for (auto &dir : directions) {
-        line = board.getLine(dir, playerX, playerY);
-        if (line.size() < 5)
-            continue;
-        for (std::size_t lineIndex = 0; line.size() - lineIndex > 5; lineIndex++) {
-            for (auto &pattern : Board::defensePattern) {
-                for (std::size_t ptnIndex = 0; ptnIndex < 5; ptnIndex++) {
-                    if (line.at(lineIndex + ptnIndex).field != pattern.at(ptnIndex))
-                        break;
-                    if (line.at(lineIndex + ptnIndex).field == Board::CellState::EMPTY) {
-                        x = line.at(lineIndex + ptnIndex).posX;
-                        y = line.at(lineIndex + ptnIndex).posY;
+        for (std::size_t i = 0; i < board.getBoard().size(); i++) {
+            for (std::size_t j = 0; j < board.getBoard().at(i).size(); j++) {
+                line = board.getLine(dir, j, i);
+                if (line.size() < 5)
+                    continue;
+                for (std::size_t lineIndex = 0; line.size() - lineIndex > 5; lineIndex++) {
+                    for (auto &pattern : Board::defensePattern) {
+                        for (std::size_t ptnIndex = 0; ptnIndex < 5; ptnIndex++) {
+                            if (line.at(lineIndex + ptnIndex).field != pattern.at(ptnIndex))
+                                break;
+                            if (line.at(lineIndex + ptnIndex).field == Board::CellState::EMPTY) {
+                                x = line.at(lineIndex + ptnIndex).posX;
+                                y = line.at(lineIndex + ptnIndex).posY;
+                            }
+                            if (ptnIndex == 4)
+                                return (true);
+                        }
                     }
-                    if (ptnIndex == 4)
-                        return (true);
                 }
             }
         }

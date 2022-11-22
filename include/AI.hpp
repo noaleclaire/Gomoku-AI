@@ -11,11 +11,10 @@
 
 class AI {
     public:
-        static void turn(Board &board);
-        static void turn(Board &board, std::size_t playerX, std::size_t playerY);
+        static void turn(Board &board, std::size_t playerX = 0, std::size_t playerY = 0);
 
     private:
         static void _start(Board &board, std::size_t &x, std::size_t &y, std::size_t playerX, std::size_t playerY);
-        static bool _attack(Board &board, std::size_t &x, std::size_t &y, std::size_t playerX, std::size_t playerY);
-        static bool _defend(Board &board, std::size_t &x, std::size_t &y, std::size_t playerX, std::size_t playerY);
+        static bool _attack(Board &board, std::size_t &x, std::size_t &y);
+        static bool _defend(Board &board, std::size_t &x, std::size_t &y);
 };
