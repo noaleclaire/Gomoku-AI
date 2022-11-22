@@ -7,10 +7,30 @@
 
 #include "Board.hpp"
 #include "BrainCommand.hpp"
+#include "define.hpp"
 
 #include <stdexcept>
 
 #include <iostream>
+
+std::vector<std::vector<Board::CellState>> Board::attackPattern = {
+        {Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY},
+        {Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER},
+        {Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER},
+        {Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER},
+        {Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER}
+    };
+
+std::vector<std::vector<Board::CellState>> Board::defensePattern = {
+        {Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY},
+        {Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER},
+        {Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY},
+        {Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER},
+        {Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER},
+        {Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER},
+        {Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER},
+        {Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY}
+    };
 
 Board::Board() : _gameStarted(false)
 {
@@ -30,6 +50,56 @@ std::pair<std::size_t, std::size_t> Board::getFieldCell() const
         }
     }
     return (fieldCells);
+}
+
+std::vector<Board::CellAttribute> Board::getLine(Direction direction, std::size_t midCellX, std::size_t midCellY)
+{
+    std::vector<CellAttribute> line = {};
+    std::pair<std::size_t, std::size_t> xAmplitude = {0, 0};
+    std::pair<std::size_t, std::size_t> yAmplitude = {0, 0};
+
+    switch (direction) {
+        case Direction::VERTICAL:
+            if (static_cast<int>(midCellX) - 4 >= 0)
+                xAmplitude.first = midCellX - 4;
+            if (midCellX + 4 < DEFAULT_BOARD_SIZE)
+                xAmplitude.second = midCellX + 4;
+            else
+                xAmplitude.second = DEFAULT_BOARD_SIZE - 1;
+            yAmplitude = {midCellY, midCellY};
+            break;
+        case Direction::HORIZONTAL:
+            if (static_cast<int>(midCellY) - 4 >= 0)
+                yAmplitude.first = midCellY - 4;
+            if (midCellY + 4 < DEFAULT_BOARD_SIZE)
+                yAmplitude.second = midCellY + 4;
+            else
+                yAmplitude.second = DEFAULT_BOARD_SIZE - 1;
+            xAmplitude = {midCellX, midCellX};
+            break;
+        default:
+            if (static_cast<int>(midCellX) - 4 >= 0)
+                xAmplitude.first = midCellX - 4;
+            if (midCellX + 4 < DEFAULT_BOARD_SIZE)
+                xAmplitude.second = midCellX + 4;
+            else
+                xAmplitude.second = DEFAULT_BOARD_SIZE - 1;
+            if (static_cast<int>(midCellY) - 4 >= 0)
+                yAmplitude.first = midCellY - 4;
+            if (midCellY + 4 < DEFAULT_BOARD_SIZE)
+                yAmplitude.second = midCellY + 4;
+            else
+                yAmplitude.second = DEFAULT_BOARD_SIZE - 1;
+            break;
+    }
+    for (std::size_t x = xAmplitude.first, y = yAmplitude.first; x <= xAmplitude.second && y <= yAmplitude.second;) {
+        line.push_back({x, y, _board.at(x).at(y)});
+        if (xAmplitude.first < xAmplitude.second)
+            x++;
+        if (yAmplitude.first < yAmplitude.second)
+            y++;
+    }
+    return (line);
 }
 
 bool Board::isGameStarted() const
