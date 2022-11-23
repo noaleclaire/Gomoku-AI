@@ -62,6 +62,8 @@ std::vector<Board::CellAttribute> Board::getLine(Direction direction, std::size_
     std::vector<CellAttribute> line = {};
     std::pair<std::size_t, std::size_t> xAmplitude = {0, 0};
     std::pair<std::size_t, std::size_t> yAmplitude = {0, 0};
+    int xStep = 0, yStep = 0;
+    bool lineFull = false;
 
     switch (direction) {
         case Direction::VERTICAL:
@@ -72,6 +74,7 @@ std::vector<Board::CellAttribute> Board::getLine(Direction direction, std::size_
             else
                 xAmplitude.second = DEFAULT_BOARD_SIZE - 1;
             yAmplitude = {midCellY, midCellY};
+            xStep = 1;
             break;
         case Direction::HORIZONTAL:
             if (static_cast<int>(midCellY) - 4 >= 0)
@@ -81,31 +84,25 @@ std::vector<Board::CellAttribute> Board::getLine(Direction direction, std::size_
             else
                 yAmplitude.second = DEFAULT_BOARD_SIZE - 1;
             xAmplitude = {midCellX, midCellX};
+            yStep = 1;
             break;
-        // case Direction::RIGHTTOLEFT:
-        //     if (static_cast<int>(midCellX) - 4 >= 0)
-        //         xAmplitude.second = midCellX - 4;
-        //     if (midCellX + 4 < DEFAULT_BOARD_SIZE)
-        //         xAmplitude.first = midCellX + 4;
-        //     else
-        //         xAmplitude.second = DEFAULT_BOARD_SIZE - 1;
-        //     if (static_cast<int>(midCellY) - 4 >= 0)
-        //         yAmplitude.first = midCellY - 4;
-        //     if (midCellY + 4 < DEFAULT_BOARD_SIZE)
-        //         yAmplitude.second = midCellY + 4;
-        //     else
-        //         yAmplitude.second = DEFAULT_BOARD_SIZE - 1;
-        //     // for (std::size_t x = xAmplitude.first, y = yAmplitude.first; x >= xAmplitude.second && y <= yAmplitude.second;) {
-        //     //     line.push_back({x, y, _board.at(x).at(y)});
-        //     //     if (xAmplitude.first > xAmplitude.second)
-        //     //         x--;
-        //     //     if (yAmplitude.first < yAmplitude.second)
-        //     //         y++;
-        //     // }
-        //     // return (line);
-        //     break;
-        // case Direction::LEFTTORIGHT:
-        default:
+        case Direction::RIGHTTOLEFT:
+            if (static_cast<int>(midCellX) - 4 >= 0)
+                xAmplitude.second = midCellX - 4;
+            if (midCellX + 4 < DEFAULT_BOARD_SIZE)
+                xAmplitude.first = midCellX + 4;
+            else
+                xAmplitude.first = DEFAULT_BOARD_SIZE - 1;
+            if (static_cast<int>(midCellY) - 4 >= 0)
+                yAmplitude.first = midCellY - 4;
+            if (midCellY + 4 < DEFAULT_BOARD_SIZE)
+                yAmplitude.second = midCellY + 4;
+            else
+                yAmplitude.second = DEFAULT_BOARD_SIZE - 1;
+            xStep = -1;
+            yStep = 1;
+            break;
+        case Direction::LEFTTORIGHT:
             if (static_cast<int>(midCellX) - 4 >= 0)
                 xAmplitude.first = midCellX - 4;
             if (midCellX + 4 < DEFAULT_BOARD_SIZE)
@@ -118,19 +115,16 @@ std::vector<Board::CellAttribute> Board::getLine(Direction direction, std::size_
                 yAmplitude.second = midCellY + 4;
             else
                 yAmplitude.second = DEFAULT_BOARD_SIZE - 1;
+            xStep = 1;
+            yStep = 1;
             break;
-        // default:
-        //     break;
+        default:
+            break;
     }
-    // for (std::size_t x = xAmplitude.first, y = yAmplitude.first; (x <= xAmplitude.second || x >= xAmplitude.second) && y <= yAmplitude.second;) {
-    for (std::size_t x = xAmplitude.first, y = yAmplitude.first; x <= xAmplitude.second && y <= yAmplitude.second;) {
+    for (std::size_t x = xAmplitude.first, y = yAmplitude.first; !lineFull; x += xStep, y += yStep) {
+        if ((x == xAmplitude.second && xStep != 0) || (y == yAmplitude.second && yStep != 0))
+            lineFull = true;
         line.push_back({x, y, _board.at(y).at(x)});
-        if (xAmplitude.first < xAmplitude.second)
-            x++;
-        // if (xAmplitude.first > xAmplitude.second)
-        //     x--;
-        if (yAmplitude.first < yAmplitude.second)
-            y++;
     }
     return (line);
 }
