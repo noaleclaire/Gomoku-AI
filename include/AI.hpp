@@ -17,4 +17,5 @@ class AI {
         static void _start(Board &board, std::size_t &x, std::size_t &y, std::size_t playerX, std::size_t playerY);
         static bool _attack(Board &board, std::size_t &x, std::size_t &y);
         static bool _defend(Board &board, std::size_t &x, std::size_t &y);
+        static void _turn(Board &board, std::size_t &x, std::size_t &y);
 };
