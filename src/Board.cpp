@@ -56,11 +56,16 @@ std::vector<std::pair<std::vector<Board::CellState>, std::size_t>> Board::scoreP
         {{Board::CellState::PLAYER, Board::CellState::EMPTY, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::PLAYER}, 100}// x . x x x
     };
 
-Board::Board() : _nbField({0, 0}), _gameStarted(false)
+Board::Board() : _nbFieldCell({0, 0}), _gameStarted(false)
 {
 }
 
 /* Getter */
+std::pair<std::size_t, std::size_t> Board::countFieldCell() const
+{
+    return (_nbFieldCell);
+}
+
 int Board::evaluation()
 {
     int score = 0;
@@ -96,11 +101,6 @@ int Board::evaluation()
 std::vector<std::vector<Board::CellState>> Board::getBoard() const
 {
     return (_board);
-}
-
-std::pair<std::size_t, std::size_t> Board::getFieldCell() const
-{
-    return (_nbField);
 }
 
 std::vector<Board::CellAttribute> Board::getLineWithMidCell(Direction direction, std::size_t midCellX, std::size_t midCellY)
@@ -300,9 +300,9 @@ bool Board::setPos(CellState field, std::size_t x, std::size_t y)
         if (_board.at(y).at(x) == CellState::EMPTY) {
             _board.at(y).at(x) = field;
             if (field == CellState::FIRST_PLAYER)
-                _nbField.first++;
+                _nbFieldCell.first++;
             else
-                _nbField.second++;
+                _nbFieldCell.second++;
             _predictionBoard = _board;
             return (true);
         }

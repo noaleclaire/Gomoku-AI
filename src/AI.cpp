@@ -16,13 +16,13 @@
 void AI::turn(Board &board, std::size_t playerX, std::size_t playerY)
 {
     std::size_t x = 0, y = 0;
-    std::pair<std::size_t, std::size_t> fieldCells = board.getFieldCell();
+    std::pair<std::size_t, std::size_t> nbFieldCell = board.countFieldCell();
 
-    if (fieldCells.first == 0 && fieldCells.second == 0) {
+    if (nbFieldCell.first == 0 && nbFieldCell.second == 0) {
         x = std::rand()%static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3)) + static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3));
         y = std::rand()%static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3)) + static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3));
         std::srand(time(NULL));
-    } else if (fieldCells.first == 1 && fieldCells.second == 0) {
+    } else if (nbFieldCell.first == 1 && nbFieldCell.second == 0) {
         _start(board, x, y, playerX, playerY);
     } else {
         // if (_attack(board, x, y) == false) {
