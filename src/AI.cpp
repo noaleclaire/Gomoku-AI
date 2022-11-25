@@ -27,12 +27,7 @@ void AI::turn(Board &board, std::size_t playerX, std::size_t playerY)
     } else {
         if (_attack(board, x, y) == false) {
             if (_defend(board, x, y) == false) {
-                x = std::rand()%DEFAULT_BOARD_SIZE;
-                y = std::rand()%DEFAULT_BOARD_SIZE;
-                while (!board.setPos(Board::CellState::SECOND_PLAYER, x, y)) {
-                    x = std::rand()%DEFAULT_BOARD_SIZE;
-                    y = std::rand()%DEFAULT_BOARD_SIZE;
-                }
+                _turn(board, x, y);
             }
         }
     }
@@ -68,10 +63,10 @@ bool AI::_attack(Board &board, std::size_t &x, std::size_t &y)
     std::vector<Board::Direction> directions = {Board::Direction::HORIZONTAL, Board::Direction::VERTICAL,
                                                 Board::Direction::LEFTTORIGHT, Board::Direction::RIGHTTOLEFT};
 
-    for (auto &dir : directions) {
-        for (std::size_t i = 0; i < board.getBoard().size(); i++) {
-            for (std::size_t j = 0; j < board.getBoard().at(i).size(); j++) {
-                line = board.getLine(dir, j, i);
+    for (std::size_t i = 0; i < board.getBoard().size(); i++) {
+        for (std::size_t j = 0; j < board.getBoard().at(i).size(); j++) {
+            for (auto &dir : directions) {
+                line = board.getLineWithMidCell(dir, j, i);
                 if (line.size() < 5)
                     continue;
                 for (std::size_t lineIndex = 0; line.size() - lineIndex > 5; lineIndex++) {
@@ -100,10 +95,10 @@ bool AI::_defend(Board &board, std::size_t &x, std::size_t &y)
     std::vector<Board::Direction> directions = {Board::Direction::HORIZONTAL, Board::Direction::VERTICAL,
                                                 Board::Direction::LEFTTORIGHT, Board::Direction::RIGHTTOLEFT};
 
-    for (auto &dir : directions) {
-        for (std::size_t i = 0; i < board.getBoard().size(); i++) {
-            for (std::size_t j = 0; j < board.getBoard().at(i).size(); j++) {
-                line = board.getLine(dir, j, i);
+    for (std::size_t i = 0; i < board.getBoard().size(); i++) {
+        for (std::size_t j = 0; j < board.getBoard().at(i).size(); j++) {
+            for (auto &dir : directions) {
+                line = board.getLineWithMidCell(dir, j, i);
                 if (line.size() < 5)
                     continue;
                 for (std::size_t lineIndex = 0; line.size() - lineIndex > 5; lineIndex++) {
@@ -124,4 +119,30 @@ bool AI::_defend(Board &board, std::size_t &x, std::size_t &y)
         }
     }
     return (false);
+}
+
+void AI::_turn(Board &board, std::size_t &x, std::size_t &y)
+{
+    // x = std::rand()%DEFAULT_BOARD_SIZE;
+    // y = std::rand()%DEFAULT_BOARD_SIZE;
+    // while (!board.setPos(Board::CellState::SECOND_PLAYER, x, y)) {
+    //     x = std::rand()%DEFAULT_BOARD_SIZE;
+    //     y = std::rand()%DEFAULT_BOARD_SIZE;
+    // }
+    int score = -9999;
+
+    // Exploration a un de profondeur
+    for (std::size_t i = 0; i < board.getBoard().size(); i++) {
+        for (std::size_t j = 0; j < board.getBoard().at(i).size(); j++) {
+            board.resetPredictionBoard();
+            if (board.setPredictionPos(Board::CellState::SECOND_PLAYER, j, i) == false)
+                continue;
+            int tmpScore = board.evaluation();
+            if (score < tmpScore) {
+                score = tmpScore;
+                x = j;
+                y = i;
+            }
+        }
+    }
 }
