@@ -123,12 +123,6 @@ bool AI::_defend(Board &board, std::size_t &x, std::size_t &y)
 
 void AI::_turn(Board &board, std::size_t &x, std::size_t &y)
 {
-    // x = std::rand()%DEFAULT_BOARD_SIZE;
-    // y = std::rand()%DEFAULT_BOARD_SIZE;
-    // while (!board.setPos(Board::CellState::SECOND_PLAYER, x, y)) {
-    //     x = std::rand()%DEFAULT_BOARD_SIZE;
-    //     y = std::rand()%DEFAULT_BOARD_SIZE;
-    // }
     int score = -9999;
 
     // Exploration a un de profondeur
@@ -137,7 +131,8 @@ void AI::_turn(Board &board, std::size_t &x, std::size_t &y)
             board.resetPredictionBoard();
             if (board.setPredictionPos(Board::CellState::SECOND_PLAYER, j, i) == false)
                 continue;
-            int tmpScore = board.evaluation();
+            // int tmpScore = board.evaluation();
+            int tmpScore = test(board, j, i);
             if (score < tmpScore) {
                 score = tmpScore;
                 x = j;
@@ -145,4 +140,24 @@ void AI::_turn(Board &board, std::size_t &x, std::size_t &y)
             }
         }
     }
+}
+
+int AI::test(Board &board, std::size_t x, std::size_t y)
+{
+    int score = 9999;
+
+    // Exploration a un de profondeur
+    for (std::size_t i = 0; i < board.getBoard().size(); i++) {
+        for (std::size_t j = 0; j < board.getBoard().at(i).size(); j++) {
+            board.resetPredictionBoard();
+            board.setPredictionPos(Board::CellState::SECOND_PLAYER, x, y);
+            if (board.setPredictionPos(Board::CellState::FIRST_PLAYER, j, i) == false)
+                continue;
+            int tmpScore = board.evaluation();
+            if (score > tmpScore) {
+                score = tmpScore;
+            }
+        }
+    }
+    return (score);
 }
