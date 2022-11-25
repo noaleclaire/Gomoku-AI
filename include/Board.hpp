@@ -49,6 +49,7 @@ class Board {
     private:
         std::vector<std::vector<CellState>> _board;
         std::vector<std::vector<CellState>> _predictionBoard;
+        std::pair<std::size_t, std::size_t> _nbField;
         Info _gameInfos;
         bool _gameStarted;
         std::size_t _size;

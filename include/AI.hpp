@@ -18,4 +18,6 @@ class AI {
         static bool _attack(Board &board, std::size_t &x, std::size_t &y);
         static bool _defend(Board &board, std::size_t &x, std::size_t &y);
         static void _turn(Board &board, std::size_t &x, std::size_t &y);
+
+        static bool yesy(Board &board, std::size_t &x, std::size_t &y);
 };
