@@ -175,6 +175,60 @@ std::vector<Board::CellAttribute> Board::getLineWithMidCell(Direction direction,
     return (line);
 }
 
+std::vector<Board::CellAttribute> Board::getLineWithEndCell(Board::Direction direction, std::size_t endCellX, std::size_t endCellY)
+{
+    std::vector<CellAttribute> line = {};
+    std::pair<std::size_t, std::size_t> xAmplitude = {0, 0};
+    std::pair<std::size_t, std::size_t> yAmplitude = {0, 0};
+    int xStep = 0, yStep = 0;
+    bool lineFull = false;
+
+    switch (direction) {
+        case Direction::VERTICAL:
+            if (static_cast<int>(endCellX - 4) >= 0)
+                xAmplitude.second = endCellX - 4;
+            xAmplitude.first = endCellX;
+            yAmplitude = {endCellY, endCellY};
+            xStep = 1;
+            break;
+        case Direction::HORIZONTAL:
+            if (static_cast<int>(endCellY - 4) >= 0)
+                yAmplitude.second = endCellY - 4;
+            yAmplitude.first = endCellY;
+            xAmplitude = {endCellX, endCellX};
+            yStep = 1;
+            break;
+        case Direction::RIGHTTOLEFT:
+            if (static_cast<int>(endCellX) - 4 >= 0)
+                xAmplitude.second = endCellX - 4;
+            if (static_cast<int>(endCellY - 4) >= 0)
+                yAmplitude.second = endCellY - 4;
+            xAmplitude.first = endCellX;
+            yAmplitude.first = endCellY;
+            xStep = -1;
+            yStep = 1;
+            break;
+        case Direction::LEFTTORIGHT:
+            if (static_cast<int>(endCellX - 4) >= 0)
+                xAmplitude.second = endCellX - 4;
+            if (static_cast<int>(endCellY - 4) >= 0)
+                yAmplitude.second = endCellY - 4;
+            xAmplitude.first = endCellX;
+            yAmplitude.first = endCellY;
+            xStep = 1;
+            yStep = 1;
+            break;
+        default:
+            break;
+    }
+    for (std::size_t x = xAmplitude.first, y = yAmplitude.first; !lineFull; x += xStep, y += yStep) {
+        if ((x == xAmplitude.second && xStep != 0) || (y == yAmplitude.second && yStep != 0))
+            lineFull = true;
+        line.push_back({x, y, _predictionBoard.at(y).at(x)});
+    }
+    return (line);
+}
+
 std::vector<Board::CellAttribute> Board::getLineWithStartCell(Board::Direction direction, std::size_t startCellX, std::size_t startCellY)
 {
     std::vector<CellAttribute> line = {};
