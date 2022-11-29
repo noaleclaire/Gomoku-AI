@@ -14,22 +14,22 @@
 #include <iostream>
 
 std::vector<std::vector<Board::CellState>> Board::attackPattern = {
-        {Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY},
-        {Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER},
-        {Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER},
-        {Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER},
-        {Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER}
+        {Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY},// X X X X .
+        {Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER},// . X X X X
+        {Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER},// X X . X X
+        {Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER},// X . X X X
+        {Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER}// X X X . X
     };
 
 std::vector<std::vector<Board::CellState>> Board::defensePattern = {
-        {Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY},
-        {Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER},
-        {Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY},
-        {Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER},
-        {Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER},
-        {Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER},
-        {Board::CellState::EMPTY, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER},
-        {Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::FIRST_PLAYER, Board::CellState::EMPTY}
+        {Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY},// . O O O .
+        {Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY},// O O . O .
+        {Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER},// . O . O O
+        {Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER},// O O . O O
+        {Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER},// O . O O O
+        {Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER},// O O O . O
+        {Board::CellState::EMPTY, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER},// . O O O O
+        {Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::SECOND_PLAYER, Board::CellState::EMPTY}// O O O O .
     };
 
 std::vector<std::pair<std::vector<Board::CellState>, std::size_t>> Board::scorePattern = {
@@ -58,6 +58,8 @@ std::vector<std::pair<std::vector<Board::CellState>, std::size_t>> Board::scoreP
 
 Board::Board() : _nbFieldCell({0, 0}), _gameStarted(false)
 {
+    _lastPos = {{0, 0, CellState::FIRST_PLAYER}, {0, 0, CellState::SECOND_PLAYER}};
+    _lastPredictedPos = {{0, 0, CellState::FIRST_PLAYER}, {0, 0, CellState::SECOND_PLAYER}};
 }
 
 /* Getter */
@@ -86,40 +88,10 @@ int Board::evaluation()
                                 (pattern.first.at(ptnIndex) != CellState::PLAYER && line.at(ptnIndex).field != pattern.first.at(ptnIndex)))
                                 break;
                             if (ptnIndex == 4 && static_cast<CellState>(state) == CellState::FIRST_PLAYER)
-                                score -= pattern.second;
-                            if (ptnIndex == 4 && static_cast<CellState>(state) == CellState::SECOND_PLAYER)
                                 score += pattern.second;
+                            if (ptnIndex == 4 && static_cast<CellState>(state) == CellState::SECOND_PLAYER)
+                                score -= pattern.second;
                         }
-                    }
-                }
-            }
-        }
-    }
-    return (score);
-}
-
-int Board::evaluation(std::size_t x, std::size_t y)
-{
-    int score = 0;
-    std::vector<CellAttribute> line = {};
-    std::vector<Direction> directions = {Direction::HORIZONTAL, Direction::VERTICAL,
-                                                Direction::LEFTTORIGHT, Direction::RIGHTTOLEFT};
-
-    for (auto &dir : directions) {
-        line = getLineWithMidCell(dir, x, y);
-        if (line.size() < 5)
-            continue;
-        for (std::size_t lineIndex = 0; line.size() - lineIndex > 5; lineIndex++) {
-            for (auto &pattern : Board::scorePattern) {
-                for (std::size_t state = static_cast<std::size_t>(CellState::FIRST_PLAYER); state <= static_cast<std::size_t>(CellState::SECOND_PLAYER); state++) {
-                    for (std::size_t ptnIndex = 0; ptnIndex < 5; ptnIndex++) {
-                            if ((pattern.first.at(ptnIndex) == CellState::PLAYER && line.at(lineIndex + ptnIndex).field != static_cast<CellState>(state)) ||
-                                (pattern.first.at(ptnIndex) != CellState::PLAYER && line.at(lineIndex + ptnIndex).field != pattern.first.at(ptnIndex)))
-                                break;
-                            if (ptnIndex == 4 && static_cast<CellState>(state) == CellState::FIRST_PLAYER)
-                                score -= pattern.second;
-                            if (ptnIndex == 4 && static_cast<CellState>(state) == CellState::SECOND_PLAYER)
-                                score += pattern.second;
                     }
                 }
             }
@@ -323,6 +295,16 @@ std::vector<Board::CellAttribute> Board::getLineWithStartCell(Board::Direction d
     return (line);
 }
 
+std::pair<Board::CellAttribute, Board::CellAttribute> Board::getLastPos() const
+{
+    return (_lastPos);
+}
+
+std::pair<Board::CellAttribute, Board::CellAttribute> Board::getLastPredictedPos() const
+{
+    return (_lastPredictedPos);
+}
+
 bool Board::isGameStarted() const
 {
     return (_gameStarted);
@@ -369,6 +351,13 @@ bool Board::setPredictionPos(CellState field, std::size_t x, std::size_t y)
     try {
         if (_predictionBoard.at(y).at(x) == CellState::EMPTY) {
             _predictionBoard.at(y).at(x) = field;
+            if (field == CellState::FIRST_PLAYER) {
+                _lastPredictedPos.first.posX = x;
+                _lastPredictedPos.first.posY = y;
+            } else {
+                _lastPredictedPos.second.posX = x;
+                _lastPredictedPos.second.posY = y;
+            }
             return (true);
         }
     } catch (const std::out_of_range &e) {
@@ -384,10 +373,15 @@ bool Board::setPos(CellState field, std::size_t x, std::size_t y)
     try {
         if (_board.at(y).at(x) == CellState::EMPTY) {
             _board.at(y).at(x) = field;
-            if (field == CellState::FIRST_PLAYER)
+            if (field == CellState::FIRST_PLAYER) {
                 _nbFieldCell.first++;
-            else
+                _lastPos.first.posX = x;
+                _lastPos.first.posY = y;
+            } else {
                 _nbFieldCell.second++;
+                _lastPos.second.posX = x;
+                _lastPos.second.posY = y;
+            }
             _predictionBoard = _board;
             return (true);
         }

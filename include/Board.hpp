@@ -31,11 +31,12 @@ class Board {
         /* Getter */
         std::pair<std::size_t, std::size_t> countFieldCell() const;
         int evaluation();
-        int evaluation(std::size_t x, std::size_t y);
         std::vector<std::vector<CellState>> getBoard() const;
         std::vector<CellAttribute> getLineWithEndCell(Direction direction, std::size_t endCellX, std::size_t endCellY);
         std::vector<CellAttribute> getLineWithMidCell(Direction direction, std::size_t midCellX, std::size_t midCellY);
         std::vector<CellAttribute> getLineWithStartCell(Direction direction, std::size_t startCellX, std::size_t startCellY);
+        std::pair<CellAttribute, CellAttribute> getLastPos() const;
+        std::pair<CellAttribute, CellAttribute> getLastPredictedPos() const;
         bool isGameStarted() const;
 
         /* Setter */
@@ -51,6 +52,8 @@ class Board {
     private:
         std::vector<std::vector<CellState>> _board;
         std::vector<std::vector<CellState>> _predictionBoard;
+        std::pair<CellAttribute, CellAttribute> _lastPos;
+        std::pair<CellAttribute, CellAttribute> _lastPredictedPos;
         std::pair<std::size_t, std::size_t> _nbFieldCell;
         Info _gameInfos;
         bool _gameStarted;
