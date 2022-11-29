@@ -25,12 +25,12 @@ void AI::turn(Board &board, std::size_t playerX, std::size_t playerY)
         x = std::rand()%static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3)) + static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3));
         y = std::rand()%static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3)) + static_cast<int>(std::ceil(DEFAULT_BOARD_SIZE/3));
         std::srand(time(NULL));
-    } else if (nbFieldCell.first == 1 && nbFieldCell.second == 0) {
+    } else if (nbFieldCell.first == 0 && nbFieldCell.second == 1) {
         _start(board, x, y, playerX, playerY);
     } else {
         _turn(board, x, y);
     }
-    board.setPos(Board::CellState::SECOND_PLAYER, x, y);
+    board.setPos(Board::CellState::FIRST_PLAYER, x, y);
     // board.printBoard();
     Printer::print(x, ",", y);
 }
@@ -50,7 +50,7 @@ void AI::_start(Board &board, std::size_t &x, std::size_t &y, std::size_t player
         possibleY.erase(std::find(possibleY.begin(), possibleY.end(), 1));
     x = playerX + possibleX.at(std::rand()%possibleX.size());
     y = playerY + possibleY.at(std::rand()%possibleY.size());
-    while (!board.setPos(Board::CellState::SECOND_PLAYER, x, y)) {
+    while (!board.setPos(Board::CellState::FIRST_PLAYER, x, y)) {
         x = playerX + possibleX.at(std::rand()%possibleX.size());
         y = playerY + possibleY.at(std::rand()%possibleY.size());
     }
@@ -120,7 +120,7 @@ bool AI::_defend(std::size_t &defX, std::size_t &defY, std::size_t &defSize, std
                 emptyX = line.at(lineIndex + ptnIndex).posX;
                 emptyY = line.at(lineIndex + ptnIndex).posY;
             }
-            if (line.at(lineIndex + ptnIndex).field == Board::CellState::FIRST_PLAYER)
+            if (line.at(lineIndex + ptnIndex).field == Board::CellState::SECOND_PLAYER)
                 tmpDefSize++;
             if (ptnIndex == 4) {
                 defX = emptyX;
@@ -149,7 +149,6 @@ void AI::_exploration(Board &board, std::size_t &x, std::size_t &y)
         it.wait();
     for (auto &it : f) {
         std::tuple<int, std::size_t, std::size_t> results = it.get();
-        // std::cout << "score=" << std::get<0>(results) << " with x=" << std::get<1>(results) << "and y=" << std::get<2>(results) << std::endl;
         if (std::get<0>(results) > score) {
             score = std::get<0>(results);
             x = std::get<1>(results);
@@ -158,31 +157,41 @@ void AI::_exploration(Board &board, std::size_t &x, std::size_t &y)
     }
 }
 
+// void AI::_exploration(Board &board, std::size_t &x, std::size_t &y)
+// {
+//     int score = -9999;
+//     std::future<std::tuple<int, std::size_t, std::size_t>> f[8];
+//     Board::CellAttribute lastPos = board.getLastPos().first;
+//     std::vector<Board::CellAttribute> possiblePos = {
+//             {lastPos.posX - 1, lastPos.posY - 1, lastPos.field}, {lastPos.posX, lastPos.posY - 1, lastPos.field},
+//             {lastPos.posX + 1, lastPos.posY - 1, lastPos.field}, {lastPos.posX + 1, lastPos.posY, lastPos.field},
+//             {lastPos.posX + 1, lastPos.posY + 1, lastPos.field}, {lastPos.posX, lastPos.posY + 1, lastPos.field},
+//             {lastPos.posX - 1, lastPos.posY + 1, lastPos.field}, {lastPos.posX - 1, lastPos.posY, lastPos.field}
+//         };
+
+//     // Exploration a un de profondeur
+//     std::cout << "[LAST POS] x=" << lastPos.posX << " y=" << lastPos.posY << std::endl;
+//     for (std::size_t posIndex = 0; posIndex < possiblePos.size(); posIndex++) {
+//         std::cout << "posX=" << possiblePos.at(posIndex).posX << " posY=" << possiblePos.at(posIndex).posY << std::endl;
+//         board.resetPredictionBoard();
+//         f[posIndex] = std::async(std::launch::async, &AI::_threadFunc, board, possiblePos.at(posIndex).posY, possiblePos.at(posIndex).posY);
+//     }
+//     for (auto &it : f)
+//         it.wait();
+//     for (auto &it : f) {
+//         std::tuple<int, std::size_t, std::size_t> results = it.get();
+//         if (std::get<0>(results) > score) {
+//             score = std::get<0>(results);
+//             x = std::get<1>(results);
+//             y = std::get<2>(results);
+//         }
+//     }
+// }
+
 std::tuple<int, std::size_t, std::size_t> AI::_threadFunc(Board board, std::size_t i, std::size_t j)
 {
-    if (board.setPredictionPos(Board::CellState::SECOND_PLAYER, j, i) == false)
+    if (board.setPredictionPos(Board::CellState::FIRST_PLAYER, j, i) == false)
         return (std::make_tuple(-9999, j, i));
     return (std::make_tuple(board.evaluation(), j, i));
     // return (std::make_tuple(AI::_playerExploration(board, j, i), j, i));
-}
-
-int AI::_playerExploration(Board board, std::size_t x, std::size_t y)
-{
-    int score = -9999;
-
-    // Exploration a un de profondeur
-    for (std::size_t i = 0; i < board.getBoard().size(); i++) {
-        for (std::size_t j = 0; j < board.getBoard().at(i).size(); j++) {
-            board.resetPredictionBoard();
-            if (board.setPredictionPos(Board::CellState::SECOND_PLAYER, x, y) == false)
-                return (-9999);
-            if (board.setPredictionPos(Board::CellState::FIRST_PLAYER, j, i) == false)
-                continue;
-            int tmpScore = board.evaluation(x, y);
-            if (score < tmpScore) {
-                score = tmpScore;
-            }
-        }
-    }
-    return (score);
 }
