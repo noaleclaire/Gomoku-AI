@@ -59,7 +59,7 @@ void AI::_start(Board &board, std::size_t &x, std::size_t &y, std::size_t player
 void AI::_turn(Board &board, std::size_t &x, std::size_t &y)
 {
     bool def = false;
-    std::size_t defX = 0, defY = 0;
+    std::size_t defX = 0, defY = 0, defSize = 0;
     std::vector<Board::CellAttribute> line = {};
     std::vector<Board::Direction> directions = {Board::Direction::HORIZONTAL, Board::Direction::VERTICAL,
                                                 Board::Direction::LEFTTORIGHT, Board::Direction::RIGHTTOLEFT};
@@ -73,8 +73,8 @@ void AI::_turn(Board &board, std::size_t &x, std::size_t &y)
                 for (std::size_t lineIndex = 0; line.size() - lineIndex > 5; lineIndex++) {
                     if (_attack(x, y, line, lineIndex) == true)
                         return;
-                    if (def == false)
-                        def = _defend(defX, defY, line, lineIndex);
+                    if (def == false && defSize < 4)
+                        def = _defend(defX, defY, defSize, line, lineIndex);
                 }
             }
         }
@@ -104,10 +104,11 @@ bool AI::_attack(std::size_t &x, std::size_t &y, std::vector<Board::CellAttribut
     return (false);
 }
 
-bool AI::_defend(std::size_t &defX, std::size_t &defY, std::vector<Board::CellAttribute> line, std::size_t lineIndex)
+bool AI::_defend(std::size_t &defX, std::size_t &defY, std::size_t &defSize, std::vector<Board::CellAttribute> line, std::size_t lineIndex)
 {
     for (auto &pattern : Board::defensePattern) {
         std::size_t emptyX = 0, emptyY = 0;
+        defSize = 0;
         for (std::size_t ptnIndex = 0; ptnIndex < 5; ptnIndex++) {
             if (line.at(lineIndex + ptnIndex).field != pattern.at(ptnIndex))
                 break;
@@ -115,6 +116,8 @@ bool AI::_defend(std::size_t &defX, std::size_t &defY, std::vector<Board::CellAt
                 emptyX = line.at(lineIndex + ptnIndex).posX;
                 emptyY = line.at(lineIndex + ptnIndex).posY;
             }
+            if (line.at(lineIndex + ptnIndex).field == Board::CellState::FIRST_PLAYER)
+                defSize++;
             if (ptnIndex == 4) {
                 defX = emptyX;
                 defY = emptyY;
