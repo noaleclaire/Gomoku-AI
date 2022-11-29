@@ -163,3 +163,23 @@ std::tuple<int, std::size_t, std::size_t> AI::test(Board board, std::size_t i, s
         return (std::make_tuple(-9999, j, i));
     return (std::make_tuple(board.evaluation(), j, i));
 }
+
+int AI::test2(Board &board, std::size_t x, std::size_t y)
+{
+    int score = 9999;
+
+    // Exploration a un de profondeur
+    for (std::size_t i = 0; i < board.getBoard().size(); i++) {
+        for (std::size_t j = 0; j < board.getBoard().at(i).size(); j++) {
+            board.resetPredictionBoard();
+            board.setPredictionPos(Board::CellState::SECOND_PLAYER, x, y);
+            if (board.setPredictionPos(Board::CellState::FIRST_PLAYER, j, i) == false)
+                continue;
+            int tmpScore = board.evaluation();
+            if (score > tmpScore) {
+                score = tmpScore;
+            }
+        }
+    }
+    return (score);
+}

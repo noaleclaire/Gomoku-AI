@@ -22,4 +22,5 @@ class AI {
 
 
         static std::tuple<int, std::size_t, std::size_t> test(Board board, std::size_t i, std::size_t j);
+        static int test2(Board &board, std::size_t x, std::size_t y);
 };
