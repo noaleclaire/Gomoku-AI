@@ -152,10 +152,10 @@ void AI::_exploration(Board &board, std::size_t &x, std::size_t &y)
 
 std::tuple<int, std::size_t, std::size_t> AI::_threadFunc(Board board, std::size_t i, std::size_t j)
 {
-    // if (board.setPredictionPos(Board::CellState::SECOND_PLAYER, j, i) == false)
-    //     return (std::make_tuple(-9999, j, i));
-    // return (std::make_tuple(board.evaluation(), j, i));
-    return (std::make_tuple(AI::_playerExploration(board, j, i), j, i));
+    if (board.setPredictionPos(Board::CellState::SECOND_PLAYER, j, i) == false)
+        return (std::make_tuple(-9999, j, i));
+    return (std::make_tuple(board.evaluation(), j, i));
+    // return (std::make_tuple(AI::_playerExploration(board, j, i), j, i));
 }
 
 int AI::_playerExploration(Board board, std::size_t x, std::size_t y)
