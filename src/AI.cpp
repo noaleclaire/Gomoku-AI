@@ -75,6 +75,7 @@ void AI::_turn(Board &board, std::size_t &x, std::size_t &y)
                         return;
                     if (def == false)
                         def = _defend(defX, defY, line, lineIndex);
+                        def = true;
                 }
             }
         }
