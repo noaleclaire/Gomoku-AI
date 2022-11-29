@@ -12,6 +12,10 @@
 
 #include <algorithm>
 #include <cmath>
+#include <functional>
+#include <future>
+#include <thread>
+#include <tuple>
 
 void AI::turn(Board &board, std::size_t playerX, std::size_t playerY)
 {
@@ -125,19 +129,37 @@ bool AI::_defend(std::size_t &defX, std::size_t &defY, std::vector<Board::CellAt
 void AI::_exploration(Board &board, std::size_t &x, std::size_t &y)
 {
     int score = -9999;
+    std::future<std::tuple<int, std::size_t, std::size_t>> f[DEFAULT_BOARD_SIZE * DEFAULT_BOARD_SIZE];
 
     // Exploration a un de profondeur
     for (std::size_t i = 0; i < board.getBoard().size(); i++) {
         for (std::size_t j = 0; j < board.getBoard().at(i).size(); j++) {
             board.resetPredictionBoard();
-            if (board.setPredictionPos(Board::CellState::SECOND_PLAYER, j, i) == false)
-                continue;
-            int tmpScore = board.evaluation();
-            if (score < tmpScore) {
-                score = tmpScore;
-                x = j;
-                y = i;
-            }
+            f[(i * DEFAULT_BOARD_SIZE) + j] = std::async(std::launch::async, &AI::test, board, i, j);
+            // if (board.setPredictionPos(Board::CellState::SECOND_PLAYER, j, i) == false)
+            //     continue;
+            // int tmpScore = board.evaluation();
+            // if (score < tmpScore) {
+            //     score = tmpScore;
+            //     x = j;
+            //     y = i;
         }
     }
+    for (auto &it : f)
+        it.wait();
+    for (auto &it : f) {
+        std::tuple<int, std::size_t, std::size_t> tafaf = it.get();
+        if (std::get<0>(tafaf) > score) {
+            score = std::get<0>(tafaf);
+            x = std::get<1>(tafaf);
+            y = std::get<2>(tafaf);
+        }
+    }
+}
+
+std::tuple<int, std::size_t, std::size_t> AI::test(Board board, std::size_t i, std::size_t j)
+{
+    if (board.setPredictionPos(Board::CellState::SECOND_PLAYER, j, i) == false)
+        return (std::make_tuple(-9999, j, i));
+    return (std::make_tuple(board.evaluation(), j, i));
 }
