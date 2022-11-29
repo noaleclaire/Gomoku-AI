@@ -73,10 +73,8 @@ void AI::_turn(Board &board, std::size_t &x, std::size_t &y)
                 for (std::size_t lineIndex = 0; line.size() - lineIndex > 5; lineIndex++) {
                     if (_attack(x, y, line, lineIndex) == true)
                         return;
-                    if (def == false) {
+                    if (def == false)
                         def = _defend(defX, defY, line, lineIndex);
-                        def = true;
-                    }
                 }
             }
         }
@@ -109,8 +107,8 @@ bool AI::_attack(std::size_t &x, std::size_t &y, std::vector<Board::CellAttribut
 bool AI::_defend(std::size_t &defX, std::size_t &defY, std::vector<Board::CellAttribute> line, std::size_t lineIndex)
 {
     for (auto &pattern : Board::defensePattern) {
+        std::size_t emptyX = 0, emptyY = 0;
         for (std::size_t ptnIndex = 0; ptnIndex < 5; ptnIndex++) {
-            std::size_t emptyX = 0, emptyY = 0;
             if (line.at(lineIndex + ptnIndex).field != pattern.at(ptnIndex))
                 break;
             if (line.at(lineIndex + ptnIndex).field == Board::CellState::EMPTY) {
@@ -143,6 +141,7 @@ void AI::_exploration(Board &board, std::size_t &x, std::size_t &y)
         it.wait();
     for (auto &it : f) {
         std::tuple<int, std::size_t, std::size_t> results = it.get();
+        // std::cout << "score=" << std::get<0>(results) << " with x=" << std::get<1>(results) << "and y=" << std::get<2>(results) << std::endl;
         if (std::get<0>(results) > score) {
             score = std::get<0>(results);
             x = std::get<1>(results);
@@ -155,7 +154,7 @@ std::tuple<int, std::size_t, std::size_t> AI::_threadFunc(Board board, std::size
 {
     // if (board.setPredictionPos(Board::CellState::SECOND_PLAYER, j, i) == false)
     //     return (std::make_tuple(-9999, j, i));
-    // return (std::make_tuple(board.evaluation(j, i), j, i));
+    // return (std::make_tuple(board.evaluation(), j, i));
     return (std::make_tuple(AI::_playerExploration(board, j, i), j, i));
 }
 

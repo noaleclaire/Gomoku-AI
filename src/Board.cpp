@@ -88,7 +88,7 @@ int Board::evaluation()
                             if (ptnIndex == 4 && static_cast<CellState>(state) == CellState::FIRST_PLAYER)
                                 score -= pattern.second;
                             if (ptnIndex == 4 && static_cast<CellState>(state) == CellState::SECOND_PLAYER)
-                                score += pattern.second;
+                                score += (pattern.second * 2);
                         }
                     }
                 }
@@ -119,7 +119,7 @@ int Board::evaluation(std::size_t x, std::size_t y)
                             if (ptnIndex == 4 && static_cast<CellState>(state) == CellState::FIRST_PLAYER)
                                 score -= pattern.second;
                             if (ptnIndex == 4 && static_cast<CellState>(state) == CellState::SECOND_PLAYER)
-                                score += pattern.second;
+                                score += (pattern.second * 2);
                     }
                 }
             }
