@@ -107,8 +107,7 @@ bool AI::_attack(std::size_t &x, std::size_t &y, std::vector<Board::CellAttribut
 bool AI::_defend(std::size_t &defX, std::size_t &defY, std::size_t &defSize, std::vector<Board::CellAttribute> line, std::size_t lineIndex)
 {
     for (auto &pattern : Board::defensePattern) {
-        std::size_t emptyX = 0, emptyY = 0;
-        defSize = 0;
+        std::size_t emptyX = 0, emptyY = 0, tmpDefSize = 0;
         for (std::size_t ptnIndex = 0; ptnIndex < 5; ptnIndex++) {
             if (line.at(lineIndex + ptnIndex).field != pattern.at(ptnIndex))
                 break;
@@ -117,10 +116,11 @@ bool AI::_defend(std::size_t &defX, std::size_t &defY, std::size_t &defSize, std
                 emptyY = line.at(lineIndex + ptnIndex).posY;
             }
             if (line.at(lineIndex + ptnIndex).field == Board::CellState::FIRST_PLAYER)
-                defSize++;
+                tmpDefSize++;
             if (ptnIndex == 4) {
                 defX = emptyX;
                 defY = emptyY;
+                defSize = tmpDefSize;
                 return (true);
             }
         }
