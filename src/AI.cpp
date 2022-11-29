@@ -133,46 +133,17 @@ bool AI::_defend(std::size_t &defX, std::size_t &defY, std::size_t &defSize, std
     return (false);
 }
 
-// void AI::_exploration(Board &board, std::size_t &x, std::size_t &y)
-// {
-//     int score = -9999;
-//     std::future<std::tuple<int, std::size_t, std::size_t>> f[DEFAULT_BOARD_SIZE * DEFAULT_BOARD_SIZE];
-
-//     // Exploration a un de profondeur
-//     for (std::size_t i = 0; i < board.getBoard().size(); i++) {
-//         for (std::size_t j = 0; j < board.getBoard().at(i).size(); j++) {
-//             board.resetPredictionBoard();
-//             f[(i * DEFAULT_BOARD_SIZE) + j] = std::async(std::launch::async, &AI::_threadFunc, board, i, j);
-//         }
-//     }
-//     for (auto &it : f)
-//         it.wait();
-//     for (auto &it : f) {
-//         std::tuple<int, std::size_t, std::size_t> results = it.get();
-//         if (std::get<0>(results) > score) {
-//             score = std::get<0>(results);
-//             x = std::get<1>(results);
-//             y = std::get<2>(results);
-//         }
-//     }
-// }
-
 void AI::_exploration(Board &board, std::size_t &x, std::size_t &y)
 {
     int score = -9999;
-    std::future<std::tuple<int, std::size_t, std::size_t>> f[8];
-    Board::CellAttribute lastPos = board.getLastPos().first;
-    std::vector<Board::CellAttribute> possiblePos = {
-            {lastPos.posX - 1, lastPos.posY - 1, lastPos.field}, {lastPos.posX, lastPos.posY - 1, lastPos.field},
-            {lastPos.posX + 1, lastPos.posY - 1, lastPos.field}, {lastPos.posX + 1, lastPos.posY, lastPos.field},
-            {lastPos.posX + 1, lastPos.posY + 1, lastPos.field}, {lastPos.posX, lastPos.posY + 1, lastPos.field},
-            {lastPos.posX - 1, lastPos.posY + 1, lastPos.field}, {lastPos.posX - 1, lastPos.posY, lastPos.field}
-        };
+    std::future<std::tuple<int, std::size_t, std::size_t>> f[DEFAULT_BOARD_SIZE * DEFAULT_BOARD_SIZE];
 
     // Exploration a un de profondeur
-    for (std::size_t posIndex = 0; posIndex < possiblePos.size(); posIndex++) {
-        board.resetPredictionBoard();
-        f[posIndex] = std::async(std::launch::async, &AI::_threadFunc, board, possiblePos.at(posIndex).posY, possiblePos.at(posIndex).posX);
+    for (std::size_t i = 0; i < board.getBoard().size(); i++) {
+        for (std::size_t j = 0; j < board.getBoard().at(i).size(); j++) {
+            board.resetPredictionBoard();
+            f[(i * DEFAULT_BOARD_SIZE) + j] = std::async(std::launch::async, &AI::_threadFunc, board, i, j);
+        }
     }
     for (auto &it : f)
         it.wait();
@@ -185,6 +156,35 @@ void AI::_exploration(Board &board, std::size_t &x, std::size_t &y)
         }
     }
 }
+
+// void AI::_exploration(Board &board, std::size_t &x, std::size_t &y)
+// {
+//     int score = -9999;
+//     std::future<std::tuple<int, std::size_t, std::size_t>> f[8];
+//     Board::CellAttribute lastPos = board.getLastPos().first;
+//     std::vector<Board::CellAttribute> possiblePos = {
+//             {lastPos.posX - 1, lastPos.posY - 1, lastPos.field}, {lastPos.posX, lastPos.posY - 1, lastPos.field},
+//             {lastPos.posX + 1, lastPos.posY - 1, lastPos.field}, {lastPos.posX + 1, lastPos.posY, lastPos.field},
+//             {lastPos.posX + 1, lastPos.posY + 1, lastPos.field}, {lastPos.posX, lastPos.posY + 1, lastPos.field},
+//             {lastPos.posX - 1, lastPos.posY + 1, lastPos.field}, {lastPos.posX - 1, lastPos.posY, lastPos.field}
+//         };
+
+//     // Exploration a un de profondeur
+//     for (std::size_t posIndex = 0; posIndex < possiblePos.size(); posIndex++) {
+//         board.resetPredictionBoard();
+//         f[posIndex] = std::async(std::launch::async, &AI::_threadFunc, board, possiblePos.at(posIndex).posY, possiblePos.at(posIndex).posX);
+//     }
+//     for (auto &it : f)
+//         it.wait();
+//     for (auto &it : f) {
+//         std::tuple<int, std::size_t, std::size_t> results = it.get();
+//         if (std::get<0>(results) > score) {
+//             score = std::get<0>(results);
+//             x = std::get<1>(results);
+//             y = std::get<2>(results);
+//         }
+//     }
+// }
 
 std::tuple<int, std::size_t, std::size_t> AI::_threadFunc(Board board, std::size_t i, std::size_t j)
 {
