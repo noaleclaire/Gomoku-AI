@@ -98,6 +98,36 @@ int Board::evaluation()
     return (score);
 }
 
+int Board::evaluation(std::size_t x, std::size_t y)
+{
+    int score = 0;
+    std::vector<CellAttribute> line = {};
+    std::vector<Direction> directions = {Direction::HORIZONTAL, Direction::VERTICAL,
+                                                Direction::LEFTTORIGHT, Direction::RIGHTTOLEFT};
+
+    for (auto &dir : directions) {
+        line = getLineWithMidCell(dir, x, y);
+        if (line.size() < 5)
+            continue;
+        for (std::size_t lineIndex = 0; line.size() - lineIndex > 5; lineIndex++) {
+            for (auto &pattern : Board::scorePattern) {
+                for (std::size_t state = static_cast<std::size_t>(CellState::FIRST_PLAYER); state <= static_cast<std::size_t>(CellState::SECOND_PLAYER); state++) {
+                    for (std::size_t ptnIndex = 0; ptnIndex < 5; ptnIndex++) {
+                            if ((pattern.first.at(ptnIndex) == CellState::PLAYER && line.at(lineIndex + ptnIndex).field != static_cast<CellState>(state)) ||
+                                (pattern.first.at(ptnIndex) != CellState::PLAYER && line.at(lineIndex + ptnIndex).field != pattern.first.at(ptnIndex)))
+                                break;
+                            if (ptnIndex == 4 && static_cast<CellState>(state) == CellState::FIRST_PLAYER)
+                                score -= pattern.second;
+                            if (ptnIndex == 4 && static_cast<CellState>(state) == CellState::SECOND_PLAYER)
+                                score += pattern.second;
+                    }
+                }
+            }
+        }
+    }
+    return (score);
+}
+
 std::vector<std::vector<Board::CellState>> Board::getBoard() const
 {
     return (_board);
@@ -170,7 +200,7 @@ std::vector<Board::CellAttribute> Board::getLineWithMidCell(Direction direction,
     for (std::size_t x = xAmplitude.first, y = yAmplitude.first; !lineFull; x += xStep, y += yStep) {
         if ((x == xAmplitude.second && xStep != 0) || (y == yAmplitude.second && yStep != 0))
             lineFull = true;
-        line.push_back({x, y, _board.at(y).at(x)});
+        line.push_back({x, y, _predictionBoard.at(y).at(x)});
     }
     return (line);
 }
