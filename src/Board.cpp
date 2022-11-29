@@ -336,6 +336,7 @@ void Board::resetBoard()
     _board.clear();
     for (std::size_t idx = 0; idx < _size; idx++)
         _board.push_back(std::vector<CellState>(_size, CellState::EMPTY));
+    _nbFieldCell = {0, 0};
 }
 
 void Board::resetPredictionBoard()
