@@ -56,11 +56,16 @@ std::vector<std::pair<std::vector<Board::CellState>, std::size_t>> Board::scoreP
         {{Board::CellState::PLAYER, Board::CellState::EMPTY, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::PLAYER}, 100}// x . x x x
     };
 
-Board::Board() : _gameStarted(false)
+Board::Board() : _nbFieldCell({0, 0}), _gameStarted(false)
 {
 }
 
 /* Getter */
+std::pair<std::size_t, std::size_t> Board::countFieldCell() const
+{
+    return (_nbFieldCell);
+}
+
 int Board::evaluation()
 {
     int score = 0;
@@ -96,21 +101,6 @@ int Board::evaluation()
 std::vector<std::vector<Board::CellState>> Board::getBoard() const
 {
     return (_board);
-}
-
-std::pair<std::size_t, std::size_t> Board::getFieldCell() const
-{
-    std::pair<std::size_t, std::size_t> fieldCells = {0, 0};
-
-    for (auto &it : _board) {
-        for (auto &elem : it) {
-            if (elem == CellState::FIRST_PLAYER)
-                fieldCells.first++;
-            if (elem == CellState::SECOND_PLAYER)
-                fieldCells.second++;
-        }
-    }
-    return (fieldCells);
 }
 
 std::vector<Board::CellAttribute> Board::getLineWithMidCell(Direction direction, std::size_t midCellX, std::size_t midCellY)
@@ -181,6 +171,60 @@ std::vector<Board::CellAttribute> Board::getLineWithMidCell(Direction direction,
         if ((x == xAmplitude.second && xStep != 0) || (y == yAmplitude.second && yStep != 0))
             lineFull = true;
         line.push_back({x, y, _board.at(y).at(x)});
+    }
+    return (line);
+}
+
+std::vector<Board::CellAttribute> Board::getLineWithEndCell(Board::Direction direction, std::size_t endCellX, std::size_t endCellY)
+{
+    std::vector<CellAttribute> line = {};
+    std::pair<std::size_t, std::size_t> xAmplitude = {0, 0};
+    std::pair<std::size_t, std::size_t> yAmplitude = {0, 0};
+    int xStep = 0, yStep = 0;
+    bool lineFull = false;
+
+    switch (direction) {
+        case Direction::VERTICAL:
+            if (static_cast<int>(endCellX - 4) >= 0)
+                xAmplitude.second = endCellX - 4;
+            xAmplitude.first = endCellX;
+            yAmplitude = {endCellY, endCellY};
+            xStep = 1;
+            break;
+        case Direction::HORIZONTAL:
+            if (static_cast<int>(endCellY - 4) >= 0)
+                yAmplitude.second = endCellY - 4;
+            yAmplitude.first = endCellY;
+            xAmplitude = {endCellX, endCellX};
+            yStep = 1;
+            break;
+        case Direction::RIGHTTOLEFT:
+            if (static_cast<int>(endCellX) - 4 >= 0)
+                xAmplitude.second = endCellX - 4;
+            if (static_cast<int>(endCellY - 4) >= 0)
+                yAmplitude.second = endCellY - 4;
+            xAmplitude.first = endCellX;
+            yAmplitude.first = endCellY;
+            xStep = -1;
+            yStep = 1;
+            break;
+        case Direction::LEFTTORIGHT:
+            if (static_cast<int>(endCellX - 4) >= 0)
+                xAmplitude.second = endCellX - 4;
+            if (static_cast<int>(endCellY - 4) >= 0)
+                yAmplitude.second = endCellY - 4;
+            xAmplitude.first = endCellX;
+            yAmplitude.first = endCellY;
+            xStep = 1;
+            yStep = 1;
+            break;
+        default:
+            break;
+    }
+    for (std::size_t x = xAmplitude.first, y = yAmplitude.first; !lineFull; x += xStep, y += yStep) {
+        if ((x == xAmplitude.second && xStep != 0) || (y == yAmplitude.second && yStep != 0))
+            lineFull = true;
+        line.push_back({x, y, _predictionBoard.at(y).at(x)});
     }
     return (line);
 }
@@ -309,6 +353,10 @@ bool Board::setPos(CellState field, std::size_t x, std::size_t y)
     try {
         if (_board.at(y).at(x) == CellState::EMPTY) {
             _board.at(y).at(x) = field;
+            if (field == CellState::FIRST_PLAYER)
+                _nbFieldCell.first++;
+            else
+                _nbFieldCell.second++;
             _predictionBoard = _board;
             return (true);
         }
