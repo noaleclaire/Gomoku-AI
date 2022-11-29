@@ -43,12 +43,12 @@ std::vector<std::pair<std::vector<Board::CellState>, std::size_t>> Board::scoreP
         {{Board::CellState::EMPTY, Board::CellState::EMPTY, Board::CellState::EMPTY, Board::CellState::PLAYER, Board::CellState::PLAYER}, 4},// . . . x x
         {{Board::CellState::EMPTY, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::EMPTY, Board::CellState::EMPTY}, 4},// . x x . .
         {{Board::CellState::EMPTY, Board::CellState::EMPTY, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::EMPTY}, 4},// . . x x .
-        {{Board::CellState::PLAYER, Board::CellState::EMPTY, Board::CellState::PLAYER, Board::CellState::EMPTY, Board::CellState::PLAYER}, 16},// x . x . x
-        {{Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::EMPTY, Board::CellState::EMPTY}, 17},// x x x . .
-        {{Board::CellState::EMPTY, Board::CellState::EMPTY, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::PLAYER}, 17},// . . x x x
-        {{Board::CellState::EMPTY, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::EMPTY}, 17},// . x x x .
-        {{Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::EMPTY, Board::CellState::EMPTY, Board::CellState::PLAYER}, 18},// x x . . x
-        {{Board::CellState::PLAYER, Board::CellState::EMPTY, Board::CellState::EMPTY, Board::CellState::PLAYER, Board::CellState::PLAYER}, 18},// x . . x x
+        {{Board::CellState::PLAYER, Board::CellState::EMPTY, Board::CellState::PLAYER, Board::CellState::EMPTY, Board::CellState::PLAYER}, 11},// x . x . x
+        {{Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::EMPTY, Board::CellState::EMPTY}, 12},// x x x . .
+        {{Board::CellState::EMPTY, Board::CellState::EMPTY, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::PLAYER}, 12},// . . x x x
+        {{Board::CellState::EMPTY, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::EMPTY}, 12},// . x x x .
+        {{Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::EMPTY, Board::CellState::EMPTY, Board::CellState::PLAYER}, 13},// x x . . x
+        {{Board::CellState::PLAYER, Board::CellState::EMPTY, Board::CellState::EMPTY, Board::CellState::PLAYER, Board::CellState::PLAYER}, 13},// x . . x x
         {{Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::EMPTY, Board::CellState::PLAYER, Board::CellState::PLAYER}, 100},// x x . x x
         {{Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::EMPTY}, 100},// x x x x .
         {{Board::CellState::EMPTY, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::PLAYER, Board::CellState::PLAYER}, 100},// . x x x x
