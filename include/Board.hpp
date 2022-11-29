@@ -31,7 +31,9 @@ class Board {
         /* Getter */
         std::pair<std::size_t, std::size_t> countFieldCell() const;
         int evaluation();
+        int evaluation(std::size_t x, std::size_t y);
         std::vector<std::vector<CellState>> getBoard() const;
+        std::vector<CellAttribute> getLineWithEndCell(Direction direction, std::size_t endCellX, std::size_t endCellY);
         std::vector<CellAttribute> getLineWithMidCell(Direction direction, std::size_t midCellX, std::size_t midCellY);
         std::vector<CellAttribute> getLineWithStartCell(Direction direction, std::size_t startCellX, std::size_t startCellY);
         bool isGameStarted() const;
