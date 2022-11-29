@@ -73,7 +73,7 @@ void AI::_turn(Board &board, std::size_t &x, std::size_t &y)
                 for (std::size_t lineIndex = 0; line.size() - lineIndex > 5; lineIndex++) {
                     if (_attack(x, y, line, lineIndex) == true)
                         return;
-                    if (def == false && defSize < 4)
+                    if (def == false || defSize < 4)
                         def = _defend(defX, defY, defSize, line, lineIndex);
                 }
             }
