@@ -160,19 +160,21 @@ bool AI::_defend(std::size_t &defX, std::size_t &defY, std::size_t &defSize, std
 void AI::_exploration(Board &board, std::size_t &x, std::size_t &y)
 {
     int score = -9999;
-    std::future<std::tuple<int, std::size_t, std::size_t>> f[8];
-    Board::CellAttribute lastPos = board.getLastPos().first;
-    std::vector<Board::CellAttribute> possiblePos = {
-            {lastPos.posX - 1, lastPos.posY - 1, lastPos.field}, {lastPos.posX, lastPos.posY - 1, lastPos.field},
-            {lastPos.posX + 1, lastPos.posY - 1, lastPos.field}, {lastPos.posX + 1, lastPos.posY, lastPos.field},
-            {lastPos.posX + 1, lastPos.posY + 1, lastPos.field}, {lastPos.posX, lastPos.posY + 1, lastPos.field},
-            {lastPos.posX - 1, lastPos.posY + 1, lastPos.field}, {lastPos.posX - 1, lastPos.posY, lastPos.field}
-        };
+    std::vector<std::future<std::tuple<int, std::size_t, std::size_t>>> f;
+    std::vector<Board::CellAttribute> cells = board.getPredictedCells(Board::CellState::FIRST_PLAYER);
+    std::vector<int> possibleX = {-1, 0, 1}, possibleY = {-1, 0, 1};
 
     // Exploration a un de profondeur
-    for (std::size_t posIndex = 0; posIndex < possiblePos.size(); posIndex++) {
-        board.resetPredictionBoard();
-        f[posIndex] = std::async(std::launch::async, &AI::_threadFunc, board, possiblePos.at(posIndex).posY, possiblePos.at(posIndex).posX);
+    for (auto &cell : cells) {
+        for (auto &addX : possibleX) {
+            for (auto &addY : possibleY) {
+                if ((cell.posX == 0 && addX == -1) || (cell.posX == DEFAULT_BOARD_SIZE - 1 && addX == 1) ||
+                    (cell.posY == 0 && addY == -1) || (cell.posY == DEFAULT_BOARD_SIZE - 1 && addY == 1))
+                    continue;
+                board.resetPredictionBoard();
+                f.push_back(std::async(std::launch::async, &AI::_threadFunc, board, cell.posX + addX, cell.posY + addY));
+            }
+        }
     }
     for (auto &it : f)
         it.wait();
@@ -186,10 +188,43 @@ void AI::_exploration(Board &board, std::size_t &x, std::size_t &y)
     }
 }
 
-std::tuple<int, std::size_t, std::size_t> AI::_threadFunc(Board board, std::size_t i, std::size_t j)
+// std::tuple<int, std::size_t, std::size_t> AI::_threadFunc(Board board, std::size_t i, std::size_t j)
+// {
+//     if (board.setPredictionPos(Board::CellState::FIRST_PLAYER, j, i) == false)
+//         return (std::make_tuple(-9999, j, i));
+//     return (std::make_tuple(board.evaluation(), j, i));
+//     // return (std::make_tuple(AI::_playerExploration(board, j, i), j, i));
+// }
+
+std::tuple<int, std::size_t, std::size_t> AI::_threadFunc(Board board, std::size_t x, std::size_t y)
 {
-    if (board.setPredictionPos(Board::CellState::FIRST_PLAYER, j, i) == false)
-        return (std::make_tuple(-9999, j, i));
-    return (std::make_tuple(board.evaluation(), j, i));
-    // return (std::make_tuple(AI::_playerExploration(board, j, i), j, i));
+    if (board.setPredictionPos(Board::CellState::FIRST_PLAYER, x, y) == false)
+        return (std::make_tuple(-9999, x, y));
+    return (std::make_tuple(_exploration2deep(board, x, y), x, y));
+}
+
+int AI::_exploration2deep(Board board, std::size_t aiX, std::size_t aiY)
+{
+    int score = 9999;
+    std::vector<Board::CellAttribute> cells = board.getPredictedCells(Board::CellState::SECOND_PLAYER);
+    std::vector<int> possibleX = {-1, 0, 1}, possibleY = {-1, 0, 1};
+
+    // Exploration a un de profondeur
+    for (auto &cell : cells) {
+        for (auto &addX : possibleX) {
+            for (auto &addY : possibleY) {
+                if ((cell.posX == 0 && addX == -1) || (cell.posX == DEFAULT_BOARD_SIZE - 1 && addX == 1) ||
+                    (cell.posY == 0 && addY == -1) || (cell.posY == DEFAULT_BOARD_SIZE - 1 && addY == 1))
+                    continue;
+                board.resetPredictionBoard();
+                board.setPredictionPos(Board::CellState::FIRST_PLAYER, aiX, aiY);
+                if (board.setPredictionPos(Board::CellState::SECOND_PLAYER, cell.posX + addX, cell.posY + addY) == false)
+                    continue;
+                int tmpScore = board.evaluation();
+                if (tmpScore < score)
+                    score = tmpScore;
+            }
+        }
+    }
+    return (score);
 }
