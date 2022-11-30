@@ -169,7 +169,7 @@ void AI::_exploration(Board &board, std::size_t &x, std::size_t &y)
         for (auto &addX : possibleX) {
             for (auto &addY : possibleY) {
                 if ((cell.posX == 0 && addX == -1) || (cell.posX == DEFAULT_BOARD_SIZE - 1 && addX == 1) ||
-                    (cell.posY == 0 && addY == -1) || (cell.posY == DEFAULT_BOARD_SIZE - 1 && addY == 1))
+                    (cell.posY == 0 && addY == -1) || (cell.posY == DEFAULT_BOARD_SIZE - 1 && addY == 1) || (addX == 0 && addY == 0))
                     continue;
                 board.resetPredictionBoard();
                 f.push_back(std::async(std::launch::async, &AI::_threadFunc, board, cell.posX + addX, cell.posY + addY));
@@ -214,7 +214,7 @@ int AI::_exploration2deep(Board board, std::size_t aiX, std::size_t aiY)
         for (auto &addX : possibleX) {
             for (auto &addY : possibleY) {
                 if ((cell.posX == 0 && addX == -1) || (cell.posX == DEFAULT_BOARD_SIZE - 1 && addX == 1) ||
-                    (cell.posY == 0 && addY == -1) || (cell.posY == DEFAULT_BOARD_SIZE - 1 && addY == 1))
+                    (cell.posY == 0 && addY == -1) || (cell.posY == DEFAULT_BOARD_SIZE - 1 && addY == 1) || (addX == 0 && addY == 0))
                     continue;
                 board.resetPredictionBoard();
                 board.setPredictionPos(Board::CellState::FIRST_PLAYER, aiX, aiY);
